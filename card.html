@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>我的陪伴紀錄｜毛²評估所</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@500;700;900&family=Iansui&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{min-height:100svh;background:#FCF3E9;color:#5B3826;font:500 15px/1.7 "Chiron GoRound TC","Noto Sans TC","PingFang TC",sans-serif;padding:env(safe-area-inset-top) 0 calc(28px + env(safe-area-inset-bottom))}
+main{width:min(560px,100%);margin:0 auto;padding:0 6px}
+#pic{min-height:60svh;display:grid;place-items:center;color:#94603F;font-weight:700;text-align:center;padding:0}
+#pic img{display:block;width:100%;height:auto;-webkit-touch-callout:default}
+#pic p{padding:40px 24px}
+.bt{padding:6px 14px 0;display:grid;gap:10px}
+button,.go{font:inherit;border:0;cursor:pointer;border-radius:99px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;line-height:1.35;transition:transform .15s}
+button:active{transform:scale(.97)}button:disabled{opacity:.5}
+.main{background:#94603F;color:#FFF8EC;font-weight:900;font-size:19px;min-height:62px;box-shadow:0 4px 0 #6F452B}
+.sub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sub button{flex-direction:column;gap:3px;background:#F9E6CC;color:#5B3826;border:1.5px solid #E5BF94;border-radius:20px;padding:10px 4px;font-size:13px;font-weight:700}
+.sub small{font-size:11px;font-weight:500;color:#94603F}
+svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+#msg{min-height:1.7em;text-align:center;font-size:13.5px;color:#94603F;padding:8px 18px 0}
+.go{margin:14px auto 0;color:#94603F;font-weight:700;text-decoration:underline;text-underline-offset:4px;width:max-content}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <div id="pic" role="status"><p>正在製作你的成果小卡…</p></div>
+  <div class="bt" id="bt" hidden>
+    <button class="main" data-k="png"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 20h16"/></svg>下載成果小卡（PNG）</button>
+    <div class="sub">
+      <button data-k="pdf"><svg viewBox="0 0 24 24"><path d="M14 3H6v18h12V7zM14 3v4h4M9 13h6M9 17h6"/></svg>完整報告<small>PDF</small></button>
+      <button data-k="three"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4"/><circle cx="15.5" cy="9" r="1.2"/></svg>三張小卡<small>圖片 ZIP</small></button>
+      <button data-k="share"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.6"/><circle cx="17.5" cy="5.5" r="2.6"/><circle cx="17.5" cy="18.5" r="2.6"/><path d="m8.4 10.8 6.8-4M8.4 13.2l6.8 4"/></svg><span id="shT">分享成果</span><small id="shS">複製連結</small></button>
+    </div>
+  </div>
+  <p id="msg"></p>
+  <a class="go" href="index.html">我也來體驗 30 天 →</a>
+</main>
+<script src="js/assets.js?v=9"></script>
+<script src="js/data.js?v=9"></script>
+<script src="js/card.js?v=9"></script>
+<script>
+(async()=>{
+const $=s=>document.querySelector(s),say=t=>$('#msg').textContent=t,pic=$('#pic');
+const o=CARD.decode(location.hash.slice(1));
+if(!o){pic.innerHTML='<p>這個連結不完整，沒有找到成果。<br>請再掃描一次 QR 碼。</p>';return}
+document.title=o.name+' 的陪伴紀錄｜毛²評估所';
+let cv,file;
+try{cv=await CARD.draw(o);const im=new Image();im.alt=o.name+' 的成果小卡';im.src=cv.toDataURL('image/png');await im.decode();pic.replaceChildren(im);$('#bt').hidden=false;say('也可以長按上面的圖片，直接存到相簿。')}
+catch(e){console.error(e);pic.innerHTML='<p>小卡製作失敗，請重新整理再試一次。</p>';return}
+try{file=new File([await CARD.blob(cv)],CARD.fname(o)+'.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]}))$('#shS').textContent='相簿／LINE';else file=null}catch(e){file=null}
+const copy=async t=>{try{await navigator.clipboard.writeText(t);return 1}catch(e){const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.append(a);a.select();let ok=0;try{ok=document.execCommand('copy')}catch(_){}a.remove();return ok}};
+$('#bt').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;b.disabled=true;
+try{const k=b.dataset.k;
+if(k=='png'){await CARD.savePng(cv,o);say('已開始下載。沒有反應的話，請長按圖片儲存。')}
+else if(k=='pdf'){await CARD.savePdf(cv,o);say('PDF 已開始下載。')}
+else if(k=='three'){await CARD.saveThree(cv,o);say('三張小卡已打包成 ZIP 下載。')}
+else if(file){await navigator.share({files:[file],title:'我的陪伴紀錄'})}
+else say(await copy(location.href)?'連結已複製，可以貼給朋友。':'無法自動複製，請複製瀏覽器上方的網址。')}
+catch(er){if(er.name!='AbortError'){console.error(er);say('沒有成功，請長按圖片儲存。')}}
+b.disabled=false});
+})();
+</script>
+</body>
+</html>
