@@ -199,12 +199,15 @@
 .lf .leaf .opt b{font-size:clamp(15px,min(2.9cqw,2.3vh),21px)}
 .lf .leaf .tt2{font-size:clamp(26px,min(6.6cqw,5.2vh),50px)}.lf .leaf .tb{font-size:clamp(16px,min(3.2cqw,2.5vh),23px)}
 }
-/* 回憶錄 → 模擬評估表：畫面先放大，再虛化，評估表從虛化中浮現 */
-.mm.zm{background:#F3EBDB}
-.mm .m1.zo{display:flex;position:fixed;left:0;z-index:4;background:#E6D9C3 var(--grain);pointer-events:none;will-change:transform,filter,opacity;animation:zmout 1.5s both}
-.mm.zm .m2{transform-origin:50% 50vh;animation:zmin 1.15s .7s cubic-bezier(.2,.7,.2,1) both;pointer-events:none}
-.mm.zm .m2 .rpn.on{animation:none}
-.mx{transition:opacity .3s}.mm.zm .mx{opacity:0;pointer-events:none}
-@keyframes zmout{0%{transform:none;filter:blur(0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.6,.7)}45%{transform:scale(1.4);filter:blur(0);opacity:1;animation-timing-function:cubic-bezier(.3,.4,.4,1)}100%{transform:scale(2);filter:blur(26px);opacity:0}}
-@keyframes zmin{from{transform:scale(.93);filter:blur(20px);opacity:0}to{transform:none;filter:blur(0);opacity:1}}
-@media(prefers-reduced-motion:reduce){@keyframes zmout{45%{filter:blur(0);opacity:1}100%{filter:blur(20px);opacity:0}}@keyframes zmin{from{filter:blur(16px);opacity:0}}}
+/* 回憶錄 → 模擬評估表：按鈕移到中間、放大、虛化（動作寫在 app.js 的 zoom） */
+.zbt{position:fixed;z-index:120;overflow:hidden}
+.zbt i{position:absolute;inset:0;background:#2b1d14}
+.zbt span{position:absolute;display:grid;place-items:center;color:#F6E8CB;font:700 14px/1 var(--sans);white-space:nowrap}
+.mm.zi .m2{animation:zmin 1s cubic-bezier(.2,.7,.2,1) both}
+.mm.zi .m2 .rpn.on{animation:none}
+@keyframes zmin{from{filter:blur(22px)}to{filter:blur(0)}}
+.mm.zm .mdn{transition:none}
+#sndw{transition:opacity .3s}body:has(.mm.zm) #sndw{opacity:0;pointer-events:none}
+/* 回憶錄頁：SKIP 讓開「查看模擬評估表」 */
+body:has(.mm) #tskip{bottom:14px!important}
+@media(min-width:761px){body:has(.mm[data-st="1"]) #tskip{left:270px}}
