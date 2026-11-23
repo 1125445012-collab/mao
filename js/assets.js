@@ -1,5 +1,6 @@
 /* 素材清單：換圖時把新檔放進 assets/，改這裡的路徑即可 */
 const A={
+logo:'assets/logo.png?v=2',
 /* 封面 */
 hero:'assets/cover/hero.webp',
 cvBg:'assets/cover/cvBg.webp',
@@ -13,8 +14,8 @@ cvCal:'assets/cover/cvCal.webp',
 cvA:'assets/cover/cvA.webp',
 cvB:'assets/cover/cvB.webp',
 cvC:'assets/cover/cvC.webp',
-cvTK:'assets/cover/cvTK.webp',
-cvTG:'assets/cover/cvTG.webp',
+cvTK:'assets/cover/titleK.png?v=2',
+cvTG:'assets/cover/titleG.png?v=2',
 /* 場景 */
 home:'assets/scenes/home.webp?v=2',
 bath:'assets/scenes/bath.webp?v=2',
