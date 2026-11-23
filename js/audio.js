@@ -24,7 +24,7 @@ svr.addEventListener('change',()=>sfx(1));
 smt.addEventListener('click',()=>{on=!on;LS('mpsMute',on?'0':'1');ico();if(on){play();sfx(1)}else if(au)au.pause()});
 document.addEventListener('pointerdown',()=>{C();if(!started)play()},{capture:true});
 document.addEventListener('keydown',()=>{if(!started)play()},{capture:true});
-document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('button,[data-a],[data-m],[data-f],[role=button],a,.cd,.kc');if(!t||wrap.contains(t)||t.id=='tskip')return;sfx(t.matches('.go,[data-a=start],[data-a=mgo]'))},{capture:true});
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('button,[data-a],[data-m],[data-f],[role=button],a,.cd,.kc');if(!t||wrap.contains(t)||t.closest('#tskip'))return;sfx(t.matches('.go,[data-a=start],[data-a=mgo]'))},{capture:true});
 document.addEventListener('visibilitychange',()=>{if(!au)return;if(document.hidden)au.pause();else if(on&&started)au.play().catch(()=>{})});
 })();
 /* ===== END AUDIO ===== */
