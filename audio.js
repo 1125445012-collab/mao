@@ -1,0 +1,30 @@
+/* ===== AUDIO (bgm + click sfx) ===== */
+const BGM_SRC='assets/audio/bgm.mp3';
+(()=>{let au=null,ctx=null,on=true,started=false,mv=.5,sv=.8;const LS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}};
+if(LS('mpsMute')=='1')on=false;if(LS('mpsMv')!=null)mv=+LS('mpsMv');if(LS('mpsSv')!=null)sv=+LS('mpsSv');
+const wrap=document.createElement('div');wrap.id='sndw';
+wrap.innerHTML='<div class="sndp" hidden><label>音樂<input type="range" id="mvr" min="0" max="100" step="1"></label><label>按鈕音效<input type="range" id="svr" min="0" max="100" step="1"></label><button type="button" id="smt"></button></div><div class="sndr"><button id="rps" type="button" aria-label="重播開場動畫" title="重播開場動畫"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 102.6-6.1"/><path d="M3.5 4v5h5"/></svg></button><button id="snd" type="button" aria-label="聲音設定"></button></div>';
+document.body.append(wrap);const btn=wrap.querySelector('#snd'),pan=wrap.querySelector('.sndp'),mvr=wrap.querySelector('#mvr'),svr=wrap.querySelector('#svr'),smt=wrap.querySelector('#smt');
+mvr.value=Math.round(mv*100);svr.value=Math.round(sv*100);
+const ico=()=>{btn.innerHTML=on&&mv>0?'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>':'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';btn.classList.toggle('off',!on);smt.textContent=on?'全部靜音':'取消靜音'};
+ico();
+const play=()=>{if(!on||document.body.classList.contains('scanmode'))return;if(!au){au=new Audio(BGM_SRC);au.loop=true}au.volume=mv*.7;au.play().then(()=>{started=true}).catch(()=>{})};
+const C=()=>{if(!ctx){const A=window.AudioContext||window.webkitAudioContext;if(A)ctx=new A()}if(ctx&&ctx.state=='suspended')ctx.resume();return ctx};
+const N=[0,2,4,7,9,12];
+const tone=(f,t,d,v,type)=>{const c=ctx,o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*1.5,t+d*.7);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(Math.min(v,.9),t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.02)};
+const sfx=big=>{if(!on||sv<=0||!C())return;const t=ctx.currentTime,b=440*Math.pow(2,N[Math.floor(Math.random()*N.length)]/12),m=sv*.5;
+if(big){tone(b,t,.18,m*1.0);tone(b*1.5,t+.07,.22,m*.9)}else{tone(b,t,.13,m);tone(b*2,t,.08,m*.3,'triangle')}};
+window.bgmRestart=()=>{if(au&&started){au.currentTime=0;if(on)au.play().catch(()=>{})}};
+const rpl=wrap.querySelector('#rps');btn.addEventListener('click',e=>{e.stopPropagation();pan.hidden=!pan.hidden});
+rpl.addEventListener('click',()=>{const cv=document.getElementById('cv');if(!cv)return;pan.hidden=true;scrollTo(0,0);cvStop();cv.classList.remove('idle','cta');void cv.offsetWidth;cvPlay();window.bgmRestart&&bgmRestart()});
+document.addEventListener('pointerdown',e=>{if(!pan.hidden&&!wrap.contains(e.target))pan.hidden=true},{capture:true});
+mvr.addEventListener('input',()=>{mv=mvr.value/100;LS('mpsMv',mv);if(mv>0&&!on){on=true;LS('mpsMute','0')}ico();if(au)au.volume=mv*.7;if(!started)play()});
+svr.addEventListener('input',()=>{sv=svr.value/100;LS('mpsSv',sv);if(sv>0&&!on){on=true;LS('mpsMute','0');ico();play()}});
+svr.addEventListener('change',()=>sfx(1));
+smt.addEventListener('click',()=>{on=!on;LS('mpsMute',on?'0':'1');ico();if(on){play();sfx(1)}else if(au)au.pause()});
+document.addEventListener('pointerdown',()=>{C();if(!started)play()},{capture:true});
+document.addEventListener('keydown',()=>{if(!started)play()},{capture:true});
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('button,[data-a],[data-m],[data-f],[role=button],a,.cd,.kc');if(!t||wrap.contains(t)||t.closest('#tskip'))return;sfx(t.matches('.go,[data-a=start],[data-a=mgo]'))},{capture:true});
+document.addEventListener('visibilitychange',()=>{if(!au)return;if(document.hidden)au.pause();else if(on&&started)au.play().catch(()=>{})});
+})();
+/* ===== END AUDIO ===== */
