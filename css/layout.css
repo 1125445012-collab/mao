@@ -213,3 +213,7 @@ body:has(.mm) #tskip{bottom:14px!important}
 @media(min-width:761px){body:has(.mm[data-st="1"]) #tskip{left:270px}}
 /* 換姿態時直接換，不要先用舊高度撐大 */
 .lf .scn .dogw{transition:none}
+/* 評估：新狗圖（原圖朝左，翻成朝向題卡）；陰影跟著姿態寬度 */
+.qz-dog.np img{top:auto;bottom:0;scale:-1 1}
+.qz-dog.np::before{left:17%;right:17%}.qz-dog.np.sit::before{left:24%;right:24%}.qz-dog.np.play::before{left:9%;right:9%}
+@media(max-width:760px){.qz-dog.np img{max-height:88%}}
