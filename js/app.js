@@ -49,17 +49,20 @@ const TX={3:['第一個夜晚','陪伴','alone','半夜，{n}在窗邊的墊子�
 20:['假日的睡過頭','作息','act','週末你想賴床，{n}把下巴靠在床邊看你。你嘆了口氣，起來穿鞋。你知道，牠不會因為你累了，就晚一點需要出門。'],
 23:['窗邊的等待','陪伴','alone','你出門前，{n}坐在玄關看你穿鞋。回家時牠還在同一個位置。你不知道牠等了多久，只知道今天尾巴搖得特別用力。'],
 27:['傍晚的散步','散步','act','傍晚的散步變慢了，{n}停在每一根電線桿前面。你沒有催牠。第 27 天，你開始懂得，陪伴不是做了什麼，而是不趕時間。']};
-const SHM={r_potty:'shT',e_pee:'shT',e_chew:'shT',r_alone:'shH',e_abnormal:'shH',e_outing:'shH',r_longplan:'shH',r_family:'shH',r_pace:'shL',r_social:'shL',r_safezone:'shA',e_noeat:'shA',r_dinner:'shS',r_appetite:'shS',r_checkup:'shS',e_medical:'shS',r_final:'shS',e_itch:'shE',r_groom:'shE'},SHHT={shZ:'20%',shP:'33%',cgL:'38%',cgS:'50%',shT:'50%',shH:'40%',shR:'42%',shL:'40%',shE:'46%',shA:'48%',shS:'48%'},CGM={r_alone:'cgL',e_abnormal:'cgL',r_longplan:'cgL',r_family:'cgL',e_outing:'cgL',r_potty:'cgS',e_pee:'cgS',e_chew:'cgS',r_dinner:'cgS',r_appetite:'cgS',r_checkup:'cgS',e_medical:'cgS',r_final:'cgS',r_safezone:'cgS',e_noeat:'cgS',e_itch:'cgS',r_groom:'cgS',r_social:'cgS',r_pace:'cgS'},shKey=(qid,sn,bk)=>(bk||S.b)=='柯基犬'?(CGM[qid]||''):(SHM[qid]||(sn=='park'||sn=='play'?'shR':''));
-/* 柴犬在純文字頁的姿態：Z 趴睡、P 趴著抬頭（索引對應 data.js 的 t） */
-const TXP={0:'shZ',1:'shP',2:'shP',3:'shP',5:'shZ',6:'shZ',7:'shZ'};
-/* 八種狗的新姿態：NPH 各姿態原圖高度（決定大小比例）、NPQ 題目→姿態、NPT 純文字頁→姿態 */
-const NPH={mutt:{sleep:182,play:414,sad:396,stand:459,sit:463},golden:{sleep:194,play:394,sad:389,stand:444,sit:458},maltese:{sleep:202,play:393,sad:377,stand:407,sit:395},poodle:{sleep:216,play:374,sad:372,stand:449,sit:454},pom:{sleep:267,play:398,sad:394,stand:436,sit:445},husky:{sleep:231,play:391,sad:347,stand:420,sit:422},corgi:{sleep:226,play:330,sad:415,stand:442,sit:462},shiba:{sleep:215,play:400,sad:419,stand:469,sit:460}},
-/* 「一生」要用回原本 SVG 姿態的犬種（例如 'shiba'），目前沒有 */
-OLDLIFE=[],
+/* 柴犬、柯基用 SVG 插圖。q 題目、t 純文字頁（data.js 的 t）、d 其他、z 最後、low 心情或健康低於 40、quiz 評估五題、main／card／face 配對大卡、小卡、背面與取名
+   柴犬：shZ 趴睡、shP 趴著抬頭、shL 牽繩、shE 抓臉、shA 警覺、shS 低落　柯基：cgL 趴睡、cgS 坐著 */
+const SVP={
+shiba:{q:{r_dinner:'shS',r_safezone:'shA',e_noeat:'shS',r_potty:'shA',r_alone:'shS',e_pee:'shP',r_family:'shP',r_activity:'shP',r_social:'shL',e_chew:'shP',r_groom:'shE',r_overtime:'shL',r_longplan:'shS',r_shop:'shP',e_itch:'shE',r_checkup:'shA',r_appetite:'shS',r_pace:'shL',e_abnormal:'shZ',r_budget:'shP',e_medical:'shS',r_final:'shP',e_outing:'shS',e_supply:'shA'},t:{0:'shZ',4:'shL',5:'shZ',6:'shZ',7:'shZ'},d:'shP',z:'shZ',low:'shS',quiz:['shP','shE','shP','shL','shA','shP'],main:'shP',card:'shP',face:'shE'},
+corgi:{q:{r_alone:'cgL',e_outing:'cgL',r_longplan:'cgL',e_abnormal:'cgL',r_appetite:'cgL',e_medical:'cgL'},t:{0:'cgL',5:'cgL',6:'cgL',7:'cgL'},d:'cgS',z:'cgL',low:'cgL',quiz:['cgS','cgS','cgS','cgS','cgS','cgS'],main:'cgS',card:'cgS',face:'cgS'}},
+/* SVG 在「一生」的高度（%）、半身圖（底邊貼齊畫面下緣）、原圖朝左要翻成朝右的 */
+SVH={shZ:22,shP:38,shL:57,shE:54,shA:54,shS:54,cgL:25,cgS:48},SVB=['shL','shE','shA','shS'],SVF=['shZ','shA','shS','cgL','cgS'];
+/* 其他六種狗：NPH 各姿態原圖高度（決定大小比例）、NPQ 題目→姿態、NPT 純文字頁→姿態 */
+const NPH={mutt:{sleep:182,play:414,sad:396,stand:459,sit:463},golden:{sleep:194,play:394,sad:389,stand:444,sit:458},maltese:{sleep:202,play:393,sad:377,stand:407,sit:395},poodle:{sleep:216,play:374,sad:372,stand:449,sit:454},pom:{sleep:267,play:398,sad:394,stand:436,sit:445},husky:{sleep:231,play:391,sad:347,stand:420,sit:422}},
 NPQ={r_dinner:'sad',r_safezone:'stand',e_noeat:'sad',r_potty:'stand',r_alone:'sad',e_pee:'sit',r_family:'sit',r_activity:'play',r_social:'sad',e_chew:'play',r_groom:'sit',r_overtime:'sit',r_longplan:'sad',r_shop:'stand',e_itch:'sad',r_checkup:'sit',r_appetite:'sad',r_pace:'sit',e_abnormal:'sleep',r_budget:'sit',e_medical:'sad',r_final:'sit',e_outing:'sad',e_supply:'sit'},
 NPT={0:'sleep',1:'sit',2:'stand',3:'sit',4:'stand',5:'sleep',6:'sleep',7:'sleep'},
-npose=(it,sn)=>{const k=B[S.b].k;if(!NPH[k]||OLDLIFE.includes(k))return'';return k+'_'+(it.t=='f'?'sleep':it.t=='t'?NPT[it.i]||'stand':NPQ[it.id]||(sn=='park'||sn=='play'?'play':'stand'))},
-nph=(key,base)=>{const [k,p]=key.split('_');return (base*NPH[k][p]/NPH[k].stand).toFixed(1)+'%'};
+npose=(it,sn)=>{const k=B[S.b].k,v=SVP[k];if(v)return it.t=='f'?v.z:it.t=='t'?v.t[it.i]||v.d:v.q[it.id]||v.d;return k+'_'+(it.t=='f'?'sleep':it.t=='t'?NPT[it.i]||'stand':NPQ[it.id]||(sn=='park'||sn=='play'?'play':'stand'))},
+npLow=np=>{const k=B[S.b].k,v=SVP[k];return v?(np==v.z?np:v.low):np.endsWith('_sleep')?np:k+'_sad'},
+nph=(key,base)=>{if(SVH[key])return (base*SVH[key]/46).toFixed(1)+'%';const [k,p]=key.split('_');return (base*NPH[k][p]/NPH[k].stand).toFixed(1)+'%'};
 const SCN={r_dinner:'dine',e_noeat:'dine',r_appetite:'dine',r_shop:'dine',r_groom:'bath',r_activity:'play',r_social:'park',r_pace:'park',r_overtime:'park',r_final:'park',e_itch:'clinic',r_checkup:'clinic',e_abnormal:'clinic',e_medical:'clinic'};
 const EV=id=>D.q.find(x=>x.id==id);
 let SEQ=[];
@@ -159,6 +162,7 @@ const QZS=['home','dine','park','play','clinic','home'];
 /* 評估每題的姿態 */
 const QZP=['stand','sit','stand','play','sit','sit'];
 function qdog(i){const k=B[S.b].k,h=NPH[k],p=QZP[i];if(!qdog.pre){qdog.pre=1;Object.keys(NPH).forEach(n=>['stand','sit','play'].forEach(q=>{new Image().src=A[n+'_'+q]}))}
+const v=SVP[k];if(v){const s=v.quiz[i];return `<div class="qz-dog sv${SVB.includes(s)?' bust':''}${SVF.includes(s)?' mir':''} ${s}" id="qzd"><img src="${A[s]}" alt="${S.b}">`}
 return h?`<div class="qz-dog np ${p}" id="qzd"><img src="${A[k+'_'+p]}" style="height:${Math.min(112,104*h[p]/h.stand).toFixed(1)}%" alt="${S.b}">`:`<div class="qz-dog" id="qzd"><img src="${A[k]}" alt="${S.b}">`}
 function setup(){if(S.step<4)S.b=best();const s=ST[S.step],i=S.step,N=ST.length-1,two=s.o&&s.o.length==2;
 const cards=s.o?`<div class="cards ${two?'two':''}">${s.o.map((x,j)=>`<button class="cd ${S.pf[s.k]===x[0]?'on':''}" data-a="val" data-v="${x[0]}"><span class="op">OPTION 0${j+1}</span>${IC[s.k][x[0]]}<b>${x[1]}</b><small>${x[2]}</small></button>`).join('')}</div>`:`<div class="nmw"><input class="nm" id="nm" maxlength="8" placeholder="小白" value="${S.name}" autocomplete="off"><button class="go" data-a="go">下一步 →</button></div>`;
@@ -183,14 +187,14 @@ const rank=()=>Object.keys(B).sort((a,b)=>fit(b).pct-fit(a).pct),best=()=>rank()
 function ready(pf=S.pf){const v=[['空間',{small:3,elevator:5,house:8,yard:10}[pf.home]||5],['家庭',{1:3,2:5,3:8,5:9}[pf.members]||5],['時間',{1:2,2:4,3:7,4:9}[pf.athome]||5],['假日',{low:8,high:4}[pf.outing]||5],['預算',{1:3,2:5,3:8,4:10}[pf.budget]||5]];return {v,pct:Math.round(v.reduce((a,x)=>a+x[1],0)/(v.length*10)*100)}}
 const mp=()=>`<span class="mp">目前最合拍<b>${S.b} ${fit(S.b).pct}%</b></span>`;
 /* 配對：主卡公園邀玩／客廳站立；小卡站立；背面與取名坐下 */
-const mdog=(b,p,cls,old)=>{const k=b.k,h=NPH[k];return h?`src="${A[k+'_'+p]}" class="${cls} np ${p}"`:`src="${old||A[k]}" class="${cls}"`};
+const mdog=(b,p,cls,w)=>{const v=SVP[b.k];if(v){const s=v[w];return `src="${A[s]}" class="${cls} ${SVF.includes(s)?'np':''} sv"`}return `src="${A[b.k+'_'+p]}" class="${cls} np ${p}"`};
 function mtop(){const k=S.b,b=B[k],f=fit(k),r=ready(),no=Object.keys(B).indexOf(k)+1,park=b.e>=4,C=2*Math.PI*42,
 chips=[['小型','中型','大型'][SZ(b)-1],'運動 '+['低','低','中','高','高'][b.e-1],'陪伴 '+(b.a<=2?'高':b.a==3?'中':'低'),'掉毛 '+(b.s<=2?'低':b.s==3?'中':'高'),'壽命 '+LS[k]+' 歲'],
 chk=[[f.sp,f.sp>=.85?'空間剛好':f.sp>=.6?'空間偏緊，要多帶牠出門':'空間明顯不足'],[f.ex,f.ex>=.85?'運動量跟得上':f.ex>=.6?'運動量要多安排':'運動量恐怕不夠'],[f.co,f.co>=.85?'陪伴時間足夠':f.co>=.6?'陪伴時間稍嫌不足':'獨處時間恐怕太長'],[f.cr,f.cr>=.85?'家人能分擔照顧':f.cr>=.6?'照顧要靠你多費心':'照顧負擔偏重'],[f.bu,f.bu>=.85?'預算寬裕':f.bu>=.6?'預算要精打細算':'每月花費恐怕超出預算']];
 root.style.setProperty('--ac',b.ac);
 $('#mtop').innerHTML=`<div class="mhd"><div><button class="mbk" data-a="mback">← 重新評估</button><small>${k==S.best?'YOUR BEST MATCH':'YOUR PICK'}</small><h1>${k==S.best?'和你最合拍的牠':'也值得考慮的牠'}</h1></div>
 <div class="rdy"><div class="rg2"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#F6E6D0" stroke-width="10"/><circle cx="50" cy="50" r="42" fill="none" stroke="#EE8A34" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C*r.pct/100} ${C}" transform="rotate(-90 50 50)"/></svg><b>${r.pct}<small>%</small></b></div><div><em>READINESS</em><p>${r.pct>=75?'準備得很充分。':r.pct>=50?'有空間，也有需要調整的地方。':'還有不少地方要先準備。'}</p><div class="rb">${r.v.map(([n,x])=>`<div>${n}<i><s style="width:${x*10}%"></s></i><span>${x}/10</span></div>`).join('')}</div></div></div></div>
-<div class="mcard"><div class="msc"><div class="sl on" style="background-image:url(${park?A.park:A.home})"></div><div class="bdg"><b>${f.pct}</b>% 契合</div><div class="stgm">${park?'公園':'客廳'}・午後</div><img ${mdog(b,park?'play':'stand','mdg')} alt="${k}"></div>
+<div class="mcard"><div class="msc"><div class="sl on" style="background-image:url(${park?A.park:A.home})"></div><div class="bdg"><b>${f.pct}</b>% 契合</div><div class="stgm">${park?'公園':'客廳'}・午後</div><img ${mdog(b,park?'play':'stand','mdg','main')} alt="${k}"></div>
 <div class="mif"><small>NO.0${no} · ${b.en}</small><h2>${k}</h2><div class="chips">${chips.map(c=>`<span>${c}</span>`).join('')}</div><div class="chk">${chk.map(([v,t])=>`<div><i class="${v>=.75?'':'w'}">${v>=.75?'✓':'!'}</i>${t}</div>`).join('')}</div><button class="tr2" data-a="mgo">就是牠了 →</button></div></div>`}
 const ICO=['米克斯','馬爾濟斯','貴賓犬','博美犬','柯基犬','柴犬','哈士奇','黃金獵犬'];
 const PW=n=>`<div class="kp">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div>`,PW3=n=>`<div class="kp">${[1,2,3].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div>`,LV=['低','低','中','高','高'];
@@ -199,11 +203,11 @@ function kcard(k){const b=B[k],no=Object.keys(B).indexOf(k)+1,sz=SZ(b),szn=['小
 M=(l,w,p)=>`<div><b>${l}</b>${p}<em>${w}</em></div>`;
 return `<div class="kc ${on?'on':''}" data-a="kpick" data-v="${k}" role="button" tabindex="0" aria-label="選擇${k}，翻面看照顧重點" style="--c:${b.ac}"><div class="kin">
 <div class="kf"><div class="kt"><b>NO.0${no}${k==S.best?'<u>BEST</u>':''}</b></div>
-<div class="ksc"><i class="kpc">${fit(k).pct}<small>% 契合</small></i><img ${mdog(b,'stand','')} alt="${k}"></div>
+<div class="ksc"><i class="kpc">${fit(k).pct}<small>% 契合</small></i><img ${mdog(b,'stand','','card')} alt="${k}"></div>
 <div class="kn"><h3>${k}</h3><small>${b.en}</small></div>
 <div class="km">${M('體型',szn,PW3(sz))}${M('運動',LV[ex-1],PW(ex))}${M('陪伴',nd>=4?'高需求':nd==3?'中':'低需求',PW(nd))}${M('掉毛',LV[sh-1],PW(sh))}</div>
 <div class="kst">${kstT(on)}</div></div>
-<div class="kb" data-a="kflip"><div class="kbh"><img ${mdog(b,'sit','',A['ic_'+b.k])} alt=""><div><small>${b.tag} · 壽命 ${LS[k]} 歲</small><h4>${k}</h4></div></div>
+<div class="kb" data-a="kflip"><div class="kbh"><img ${mdog(b,'sit','','face')} alt=""><div><small>${b.tag} · 壽命 ${LS[k]} 歲</small><h4>${k}</h4></div></div>
 <h5>CARE · 四個照顧需求</h5><ul class="kbn"><li><b>運動</b><span>${b.n.act}</span></li><li><b>陪伴</b><span>${b.n.alone}</span></li><li><b>毛髮</b><span>${b.n.care}</span></li><li><b>花費</b><span>${b.n.cost}</span></li></ul>
 <div class="kbr"><b>REMINDER · 飼養提醒</b>${b.n.train}</div>
 <button class="kbk" data-a="kflip" aria-label="翻回正面">↻ 翻回正面</button></div></div></div>`}
@@ -218,17 +222,17 @@ if(first)c._kt=setTimeout(()=>{if(!c.isConnected)return;kflip(c,0);c._kt=setTime
 function match(keep){const ord=rank();S.best=ord[0];if(!keep)S.b=ord[0];
 app.innerHTML=nav(1)+`<main class="mtc"><section class="mtop" id="mtop"></section><section class="mbot" id="kbot"><p class="ot9">八位毛孩<small>點卡片認識牠，也可以換一隻。</small></p><div class="kg">${ord.map(kcard).join('')}</div></section></main>`;mtop();scrollTo(0,0)}
 function nameModal(){if($('.nmd'))return;const k=S.b,b=B[k],m=document.createElement('div');m.className='nmd';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');
-m.innerHTML=`<div class="nmb"><button class="nx" data-a="nmx" aria-label="關閉">×</button><div class="nmp" style="--c:${b.ac}"><img ${mdog(b,'sit','',k=='柴犬'?A.shF:A[b.k])} alt="${k}"></div><small>NAME · IT</small><h2>替牠取個名字</h2><p>${k}・契合度 ${fit(k).pct}%</p><input class="nm2" id="nm2" maxlength="8" placeholder="小白" value="${S.name}" autocomplete="off"><div class="chp">${['小白','麻糬','黑糖','棉花','豆花','可樂'].map(n=>`<button data-a="nmchip" data-v="${n}">${n}</button>`).join('')}</div><button class="go" data-a="nmgo">開始 30 天 →</button></div>`;
+m.innerHTML=`<div class="nmb"><button class="nx" data-a="nmx" aria-label="關閉">×</button><div class="nmp" style="--c:${b.ac}"><img ${mdog(b,'sit','','face')} alt="${k}"></div><small>NAME · IT</small><h2>替牠取個名字</h2><p>${k}・契合度 ${fit(k).pct}%</p><input class="nm2" id="nm2" maxlength="8" placeholder="小白" value="${S.name}" autocomplete="off"><div class="chp">${['小白','麻糬','黑糖','棉花','豆花','可樂'].map(n=>`<button data-a="nmchip" data-v="${n}">${n}</button>`).join('')}</div><button class="go" data-a="nmgo">開始 30 天 →</button></div>`;
 m.addEventListener('click',e=>{if(e.target===m)m.remove()});app.append(m);const i=$('#nm2');i.addEventListener('keydown',e=>{if(e.key=='Enter'){S.name=i.value.trim()||'小白';play()}else if(e.key=='Escape')m.remove()});setTimeout(()=>i.focus(),250);burst(innerWidth/2,innerHeight/2)}
 function stopAll(){clearInterval(S.iv);clearTimeout(S.at);clearInterval(S.rv);clearTimeout(S.pt);S.pop=0;S.pend=0}
 function init(){const p=S.pf,sm=({1:50,2:60,3:75,4:88}[p.athome]||60)-({low:0,high:12}[p.outing]||0),u={1:12,2:40,3:60,5:72}[p.members]||40;
 buildSeq();Object.assign(S,{pi:0,day:1,happy:70,health:90,trust:35,stress:10,time:sm,family:Math.max(5,u),money:30000,spent:0,bor:0,flags:[],hist:[],ab:{},sud:0,sudT:0,sp:1,sdDays:plan(),sdDone:[],pop:0,pend:0,ps:null});clearInterval(S.iv);clearTimeout(S.at);clearTimeout(S.pt);clearInterval(S.rv);root.style.setProperty('--t',1)}
-function play(){init();{const k=B[S.b].k;if(NPH[k]&&!OLDLIFE.includes(k))Object.keys(NPH[k]).forEach(p=>{new Image().src=A[k+'_'+p]})}app.innerHTML=nav(2)+`<main class="lf"><section class="lf-scene"><div class="scn" id="scn">${['home','park','play','clinic','bath','dine'].map(k=>`<div class="sl" data-s="${k}" style="background-image:url(${A[k]})"></div>`).join('')}<div class="dogw" id="dw"><img class="dog" src="${A[npose(SEQ[0]||{},scene(1))||B[S.b].k]}" alt="${S.b}"></div></div><div class="hud9"><div class="who"><b>${S.name}</b><small>${B[S.b].en}・${S.b}</small></div><div class="age"><b id="sn"></b><u id="su"></u></div><div class="spd" id="spd">${[[0,"⏸"],[1,"1×"],[2,"2×"],[4,"4×"]].map(([v,l])=>`<button class="${v==1?"on":""}" data-a="spd" data-v="${v}" aria-label="${v?"自動翻頁 "+v+" 倍速":"手動翻頁"}">${l}</button>`).join("")}</div></div><div class="sts" id="hud"></div><div class="tkb9"><span>DAY <b id="tkd">01</b>/ 30</span><div class="tkb" id="tk"></div></div></section><aside class="pad9"><div class="cal"><div class="pile"></div><div class="rg"><i></i><i></i><i></i><i></i></div></div></aside></main>`;
+function play(){init();{const k=B[S.b].k;if(NPH[k])Object.keys(NPH[k]).forEach(p=>{new Image().src=A[k+'_'+p]})}app.innerHTML=nav(2)+`<main class="lf"><section class="lf-scene"><div class="scn" id="scn">${['home','park','play','clinic','bath','dine'].map(k=>`<div class="sl" data-s="${k}" style="background-image:url(${A[k]})"></div>`).join('')}<div class="dogw" id="dw"><img class="dog" src="${A[npose(SEQ[0]||{},scene(1))||B[S.b].k]}" alt="${S.b}"></div></div><div class="hud9"><div class="who"><b>${S.name}</b><small>${B[S.b].en}・${S.b}</small></div><div class="age"><b id="sn"></b><u id="su"></u></div><div class="spd" id="spd">${[[0,"⏸"],[1,"1×"],[2,"2×"],[4,"4×"]].map(([v,l])=>`<button class="${v==1?"on":""}" data-a="spd" data-v="${v}" aria-label="${v?"自動翻頁 "+v+" 倍速":"手動翻頁"}">${l}</button>`).join("")}</div></div><div class="sts" id="hud"></div><div class="tkb9"><span>DAY <b id="tkd">01</b>/ 30</span><div class="tkb" id="tk"></div></div></section><aside class="pad9"><div class="cal"><div class="pile"></div><div class="rg"><i></i><i></i><i></i><i></i></div></div></aside></main>`;
 hud(1);const l=leaf(0);l.classList.add('drop');$('.cal').append(l);nar(1);sched();scrollTo(0,0)}
 function hud(first){const si=sg(S.day),sn=S.ps||scene(S.day);$('#sn').textContent=AGE[Math.min(S.day,30)-1];$('#su').textContent=SH[si];
 $('#tk').innerHTML=Array.from({length:30},(_,i)=>`<i class="${i+1<S.day?'d':i+1==S.day?'c':''} ${FS.includes(i+1)?'s':''}">${i+1}</i>`).join('');$('#tkd').textContent=String(Math.min(S.day,30)).padStart(2,'0');
 $$('.sl').forEach(x=>x.classList.toggle('on',x.dataset.s==sn));
-{const dw=$('#dw'),im=dw&&$('img',dw);if(im){const it=SEQ[S.pi]||{},qid=it.t=='q'?it.id:'',SH_=SHM,HT=SHHT;let k=(S.b=='柴犬'||S.b=='柯基犬')?shKey(qid,sn):'';if(S.b=='柴犬'&&it.t=='t')k=TXP[it.i]||k;let np=npose(it,sn);if(np&&(S.happy<40||S.health<40)&&!np.endsWith('_sleep'))np=B[S.b].k+'_sad';if(np)k=np;const src=k?A[k]:A[B[S.b].k];if(im.getAttribute('src')!==src){im.setAttribute('src',src)}dw.style.height=np?nph(np,46):k?HT[k]:''}}$('#scn').classList.toggle('sd',S.pop==1);{const cur=S.pi==SEQ.length-1?3:2;$$('#app .dk.st').forEach((x,i)=>{x.classList.toggle('on',i==cur);x.classList.toggle('done',i<cur);x.classList.toggle('locked',i>cur)})}
+{const dw=$('#dw'),im=dw&&$('img',dw);if(im){let np=npose(SEQ[S.pi]||{},sn);if(S.happy<40||S.health<40)np=npLow(np);const src=A[np];if(im.getAttribute('src')!==src){im.setAttribute('src',src)}dw.style.height=nph(np,46);dw.dataset.bust=SVB.includes(np)?1:''}}$('#scn').classList.toggle('sd',S.pop==1);{const cur=S.pi==SEQ.length-1?3:2;$$('#app .dk.st').forEach((x,i)=>{x.classList.toggle('on',i==cur);x.classList.toggle('done',i<cur);x.classList.toggle('locked',i>cur)})}
 if(first)$('#hud').innerHTML=[['健康','#7C9A68'],['心情','#DE7228'],['羈絆','#E49BB9']].map(([k,c])=>`<div><small>${k}</small><em><i style="background:${c}"></i></em><b></b></div>`).join('')+'<div><small>累計花費</small><b class="mn"></b></div>';
 const c=$$('#hud>div'),vals=[S.health,S.happy,S.trust,S.spent],old=S.dv||vals;S.dv=vals.slice();
 vals.forEach((n,i)=>{const cell=c[i],b=$('b',cell),o=old[i],fm=v=>i<3?Math.round(v):'NT$ '+Math.round(v).toLocaleString();if(i<3)$('i',cell).style.width=n+'%';if(first||o===n){b.textContent=fm(n);return}
@@ -358,7 +362,7 @@ n=pool.length,
 bub=h=>{const r=fill(h.o.result||'').split(/[，。]/)[0];return r.length>14?r.slice(0,14)+'…':r},
 agef=h=>AGE[Math.min(h.d,30)-1]+' 歲・'+SH[sg(h.d)],
 img=(h,s)=>SCI[s]?`<div class="phi" style="background-image:url(${SCI[s]})"></div>`:`<div class="phi">${HOME}</div>`,
-pol=(h,i,big)=>{const g=gr(h),s=sc(h),dc=['#C2473B','#D9A03B','#3E8E63'][g];return `<div class="pl${big?' big':''}" ${big?'':`data-i="${i}" role="button" tabindex="0" aria-label="放大查看 DAY ${h.d}"`}><div class="ph" data-s="${s}">${img(h,s)}${(np=>np?`<img src="${A[np]}" style="width:auto;height:${nph(np,58)}" alt="">`:`<img src="${(S.b=='柴犬'||S.b=='柯基犬')&&shKey(h.e.id,s)?A[shKey(h.e.id,s)]:A[dk]}" alt="">`)(npose({t:'q',id:h.e.id},s))}<span class="bb">${bub(h)}</span></div><div class="pc"><div class="pr"><b>DAY ${String(h.d).padStart(2,'0')}</b><em>${agef(h)}</em></div><span class="pt">${h.e.title}</span><span class="po"><i style="background:${dc}"></i>${fill(h.o.label)}</span></div></div>`},
+pol=(h,i,big)=>{const g=gr(h),s=sc(h),dc=['#C2473B','#D9A03B','#3E8E63'][g];return `<div class="pl${big?' big':''}" ${big?'':`data-i="${i}" role="button" tabindex="0" aria-label="放大查看 DAY ${h.d}"`}><div class="ph" data-s="${s}">${img(h,s)}${(np=>`<img src="${A[np]}" style="width:auto;height:${nph(np,58)}" alt="">`)(npose({t:'q',id:h.e.id},s))}<span class="bb">${bub(h)}</span></div><div class="pc"><div class="pr"><b>DAY ${String(h.d).padStart(2,'0')}</b><em>${agef(h)}</em></div><span class="pt">${h.e.title}</span><span class="po"><i style="background:${dc}"></i>${fill(h.o.label)}</span></div></div>`},
 cardW=h=>0,
 cats=Object.keys(AB).map(k=>({k,rows:H.filter(h=>(h.e.options.find(o=>o.ability)||{}).ability==k)})).filter(c=>c.rows.length),
 good=H.filter(h=>gr(h)==2).length,tot=H.length||1,
