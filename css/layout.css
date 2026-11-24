@@ -230,3 +230,7 @@ body:has(.mm) #tskip{bottom:14px!important}
 .lf .scn .dogw[data-bust="1"]{bottom:-14px}
 @media(max-width:900px){.lf .scn .dogw[data-bust="1"]{bottom:25%}}
 @media(max-width:760px){.qz-dog.sv img{top:auto;bottom:0;height:88%}.qz-dog.bust{margin-bottom:-8px}.qz-dog.bust .qz-mp{bottom:auto}}
+/* 首頁滿版：背景鋪滿整個視窗，物件維持比例（位置算法在 app.js 的 cover） */
+.hs{container-type:size}.cam{--k:min(100cqw/2576,100cqh/1248);--u:min(100cqw/5152 + 100cqh/2496,var(--k)*1.1)}
+@media(min-width:821px) and (min-aspect-ratio:6/5){.hs{left:0;top:0;width:100%;height:100%;aspect-ratio:auto;transform:none}}
+.cvf .top{border-bottom:0}
