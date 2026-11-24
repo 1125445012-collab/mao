@@ -52,11 +52,13 @@ const TX={3:['第一個夜晚','陪伴','alone','半夜，{n}在窗邊的墊子�
 const SHM={r_potty:'shT',e_pee:'shT',e_chew:'shT',r_alone:'shH',e_abnormal:'shH',e_outing:'shH',r_longplan:'shH',r_family:'shH',r_pace:'shL',r_social:'shL',r_safezone:'shA',e_noeat:'shA',r_dinner:'shS',r_appetite:'shS',r_checkup:'shS',e_medical:'shS',r_final:'shS',e_itch:'shE',r_groom:'shE'},SHHT={shZ:'20%',shP:'33%',cgL:'38%',cgS:'50%',shT:'50%',shH:'40%',shR:'42%',shL:'40%',shE:'46%',shA:'48%',shS:'48%'},CGM={r_alone:'cgL',e_abnormal:'cgL',r_longplan:'cgL',r_family:'cgL',e_outing:'cgL',r_potty:'cgS',e_pee:'cgS',e_chew:'cgS',r_dinner:'cgS',r_appetite:'cgS',r_checkup:'cgS',e_medical:'cgS',r_final:'cgS',r_safezone:'cgS',e_noeat:'cgS',e_itch:'cgS',r_groom:'cgS',r_social:'cgS',r_pace:'cgS'},shKey=(qid,sn,bk)=>(bk||S.b)=='柯基犬'?(CGM[qid]||''):(SHM[qid]||(sn=='park'||sn=='play'?'shR':''));
 /* 柴犬在純文字頁的姿態：Z 趴睡、P 趴著抬頭（索引對應 data.js 的 t） */
 const TXP={0:'shZ',1:'shP',2:'shP',3:'shP',5:'shZ',6:'shZ',7:'shZ'};
-/* 其他六種狗的姿態：NPH 各姿態原圖高度（決定大小比例）、NPQ 題目→姿態、NPT 純文字頁→姿態 */
-const NPH={mutt:{sleep:182,play:414,sad:396,stand:459,sit:463},golden:{sleep:194,play:394,sad:389,stand:444,sit:458},maltese:{sleep:202,play:393,sad:377,stand:407,sit:395},poodle:{sleep:216,play:374,sad:372,stand:449,sit:454},pom:{sleep:267,play:398,sad:394,stand:436,sit:445},husky:{sleep:231,play:391,sad:347,stand:420,sit:422}},
+/* 八種狗的新姿態：NPH 各姿態原圖高度（決定大小比例）、NPQ 題目→姿態、NPT 純文字頁→姿態 */
+const NPH={mutt:{sleep:182,play:414,sad:396,stand:459,sit:463},golden:{sleep:194,play:394,sad:389,stand:444,sit:458},maltese:{sleep:202,play:393,sad:377,stand:407,sit:395},poodle:{sleep:216,play:374,sad:372,stand:449,sit:454},pom:{sleep:267,play:398,sad:394,stand:436,sit:445},husky:{sleep:231,play:391,sad:347,stand:420,sit:422},corgi:{sleep:226,play:330,sad:415,stand:442,sit:462},shiba:{sleep:215,play:400,sad:419,stand:469,sit:460}},
+/* 「一生」要用回原本 SVG 姿態的犬種（例如 'shiba'），目前沒有 */
+OLDLIFE=[],
 NPQ={r_dinner:'sad',r_safezone:'stand',e_noeat:'sad',r_potty:'stand',r_alone:'sad',e_pee:'sit',r_family:'sit',r_activity:'play',r_social:'sad',e_chew:'play',r_groom:'sit',r_overtime:'sit',r_longplan:'sad',r_shop:'stand',e_itch:'sad',r_checkup:'sit',r_appetite:'sad',r_pace:'sit',e_abnormal:'sleep',r_budget:'sit',e_medical:'sad',r_final:'sit',e_outing:'sad',e_supply:'sit'},
 NPT={0:'sleep',1:'sit',2:'stand',3:'sit',4:'stand',5:'sleep',6:'sleep',7:'sleep'},
-npose=(it,sn)=>{const k=B[S.b].k;if(!NPH[k])return'';return k+'_'+(it.t=='f'?'sleep':it.t=='t'?NPT[it.i]||'stand':NPQ[it.id]||(sn=='park'||sn=='play'?'play':'stand'))},
+npose=(it,sn)=>{const k=B[S.b].k;if(!NPH[k]||OLDLIFE.includes(k))return'';return k+'_'+(it.t=='f'?'sleep':it.t=='t'?NPT[it.i]||'stand':NPQ[it.id]||(sn=='park'||sn=='play'?'play':'stand'))},
 nph=(key,base)=>{const [k,p]=key.split('_');return (base*NPH[k][p]/NPH[k].stand).toFixed(1)+'%'};
 const SCN={r_dinner:'dine',e_noeat:'dine',r_appetite:'dine',r_shop:'dine',r_groom:'bath',r_activity:'play',r_social:'park',r_pace:'park',r_overtime:'park',r_final:'park',e_itch:'clinic',r_checkup:'clinic',e_abnormal:'clinic',e_medical:'clinic'};
 const EV=id=>D.q.find(x=>x.id==id);
@@ -154,7 +156,7 @@ outing:{low:svg('<polygon points="20,50 100,50 100,82 20,82" fill="#E48D72"/><po
 high:svg('<circle cx="90" cy="32" r="13" fill="#F3B15E"/><polygon points="4,100 44,40 84,100" fill="#8CA0AA"/><polygon points="44,40 84,100 44,100" fill="#5F7685"/><polygon points="50,100 82,58 116,100" fill="#A3B987"/><polygon points="82,58 116,100 82,100" fill="#7C9A68"/><rect x="0" y="100" width="120" height="6" fill="#5F7A3A"/>')}};
 /* 評估每題的場景 */
 const QZS=['home','dine','park','play','clinic','home'];
-/* 評估每題的姿態（柴犬、柯基沒有新圖，用原本的站姿） */
+/* 評估每題的姿態 */
 const QZP=['stand','sit','stand','play','sit','sit'];
 function qdog(i){const k=B[S.b].k,h=NPH[k],p=QZP[i];if(!qdog.pre){qdog.pre=1;Object.keys(NPH).forEach(n=>['stand','sit','play'].forEach(q=>{new Image().src=A[n+'_'+q]}))}
 return h?`<div class="qz-dog np ${p}" id="qzd"><img src="${A[k+'_'+p]}" style="height:${Math.min(112,104*h[p]/h.stand).toFixed(1)}%" alt="${S.b}">`:`<div class="qz-dog" id="qzd"><img src="${A[k]}" alt="${S.b}">`}
@@ -180,7 +182,7 @@ const per=n?1-d/n:.6;return {sp,ex,co,cr,bu,pct:Math.round(32+67*(.45*(.2*sp+.2*
 const rank=()=>Object.keys(B).sort((a,b)=>fit(b).pct-fit(a).pct),best=()=>rank()[0];
 function ready(pf=S.pf){const v=[['空間',{small:3,elevator:5,house:8,yard:10}[pf.home]||5],['家庭',{1:3,2:5,3:8,5:9}[pf.members]||5],['時間',{1:2,2:4,3:7,4:9}[pf.athome]||5],['假日',{low:8,high:4}[pf.outing]||5],['預算',{1:3,2:5,3:8,4:10}[pf.budget]||5]];return {v,pct:Math.round(v.reduce((a,x)=>a+x[1],0)/(v.length*10)*100)}}
 const mp=()=>`<span class="mp">目前最合拍<b>${S.b} ${fit(S.b).pct}%</b></span>`;
-/* 配對：六種狗用新圖（主卡：公園邀玩／客廳站立；小卡站立；背面與取名坐下），柴犬、柯基用原圖 */
+/* 配對：主卡公園邀玩／客廳站立；小卡站立；背面與取名坐下 */
 const mdog=(b,p,cls,old)=>{const k=b.k,h=NPH[k];return h?`src="${A[k+'_'+p]}" class="${cls} np ${p}"`:`src="${old||A[k]}" class="${cls}"`};
 function mtop(){const k=S.b,b=B[k],f=fit(k),r=ready(),no=Object.keys(B).indexOf(k)+1,park=b.e>=4,C=2*Math.PI*42,
 chips=[['小型','中型','大型'][SZ(b)-1],'運動 '+['低','低','中','高','高'][b.e-1],'陪伴 '+(b.a<=2?'高':b.a==3?'中':'低'),'掉毛 '+(b.s<=2?'低':b.s==3?'中':'高'),'壽命 '+LS[k]+' 歲'],
@@ -221,7 +223,7 @@ m.addEventListener('click',e=>{if(e.target===m)m.remove()});app.append(m);const 
 function stopAll(){clearInterval(S.iv);clearTimeout(S.at);clearInterval(S.rv);clearTimeout(S.pt);S.pop=0;S.pend=0}
 function init(){const p=S.pf,sm=({1:50,2:60,3:75,4:88}[p.athome]||60)-({low:0,high:12}[p.outing]||0),u={1:12,2:40,3:60,5:72}[p.members]||40;
 buildSeq();Object.assign(S,{pi:0,day:1,happy:70,health:90,trust:35,stress:10,time:sm,family:Math.max(5,u),money:30000,spent:0,bor:0,flags:[],hist:[],ab:{},sud:0,sudT:0,sp:1,sdDays:plan(),sdDone:[],pop:0,pend:0,ps:null});clearInterval(S.iv);clearTimeout(S.at);clearTimeout(S.pt);clearInterval(S.rv);root.style.setProperty('--t',1)}
-function play(){init();{const k=B[S.b].k;if(NPH[k])Object.keys(NPH[k]).forEach(p=>{new Image().src=A[k+'_'+p]})}app.innerHTML=nav(2)+`<main class="lf"><section class="lf-scene"><div class="scn" id="scn">${['home','park','play','clinic','bath','dine'].map(k=>`<div class="sl" data-s="${k}" style="background-image:url(${A[k]})"></div>`).join('')}<div class="dogw" id="dw"><img class="dog" src="${A[npose(SEQ[0]||{},scene(1))||B[S.b].k]}" alt="${S.b}"></div></div><div class="hud9"><div class="who"><b>${S.name}</b><small>${B[S.b].en}・${S.b}</small></div><div class="age"><b id="sn"></b><u id="su"></u></div><div class="spd" id="spd">${[[0,"⏸"],[1,"1×"],[2,"2×"],[4,"4×"]].map(([v,l])=>`<button class="${v==1?"on":""}" data-a="spd" data-v="${v}" aria-label="${v?"自動翻頁 "+v+" 倍速":"手動翻頁"}">${l}</button>`).join("")}</div></div><div class="sts" id="hud"></div><div class="tkb9"><span>DAY <b id="tkd">01</b>/ 30</span><div class="tkb" id="tk"></div></div></section><aside class="pad9"><div class="cal"><div class="pile"></div><div class="rg"><i></i><i></i><i></i><i></i></div></div></aside></main>`;
+function play(){init();{const k=B[S.b].k;if(NPH[k]&&!OLDLIFE.includes(k))Object.keys(NPH[k]).forEach(p=>{new Image().src=A[k+'_'+p]})}app.innerHTML=nav(2)+`<main class="lf"><section class="lf-scene"><div class="scn" id="scn">${['home','park','play','clinic','bath','dine'].map(k=>`<div class="sl" data-s="${k}" style="background-image:url(${A[k]})"></div>`).join('')}<div class="dogw" id="dw"><img class="dog" src="${A[npose(SEQ[0]||{},scene(1))||B[S.b].k]}" alt="${S.b}"></div></div><div class="hud9"><div class="who"><b>${S.name}</b><small>${B[S.b].en}・${S.b}</small></div><div class="age"><b id="sn"></b><u id="su"></u></div><div class="spd" id="spd">${[[0,"⏸"],[1,"1×"],[2,"2×"],[4,"4×"]].map(([v,l])=>`<button class="${v==1?"on":""}" data-a="spd" data-v="${v}" aria-label="${v?"自動翻頁 "+v+" 倍速":"手動翻頁"}">${l}</button>`).join("")}</div></div><div class="sts" id="hud"></div><div class="tkb9"><span>DAY <b id="tkd">01</b>/ 30</span><div class="tkb" id="tk"></div></div></section><aside class="pad9"><div class="cal"><div class="pile"></div><div class="rg"><i></i><i></i><i></i><i></i></div></div></aside></main>`;
 hud(1);const l=leaf(0);l.classList.add('drop');$('.cal').append(l);nar(1);sched();scrollTo(0,0)}
 function hud(first){const si=sg(S.day),sn=S.ps||scene(S.day);$('#sn').textContent=AGE[Math.min(S.day,30)-1];$('#su').textContent=SH[si];
 $('#tk').innerHTML=Array.from({length:30},(_,i)=>`<i class="${i+1<S.day?'d':i+1==S.day?'c':''} ${FS.includes(i+1)?'s':''}">${i+1}</i>`).join('');$('#tkd').textContent=String(Math.min(S.day,30)).padStart(2,'0');
