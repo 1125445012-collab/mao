@@ -217,3 +217,8 @@ body:has(.mm) #tskip{bottom:14px!important}
 .qz-dog.np img{top:auto;bottom:0;scale:-1 1}
 .qz-dog.np::before{left:17%;right:17%}.qz-dog.np.sit::before{left:24%;right:24%}.qz-dog.np.play::before{left:9%;right:9%}
 @media(max-width:760px){.qz-dog.np img{max-height:88%}}
+/* 配對：新狗圖翻成朝右，跟柴犬、柯基同方向 */
+.mdg.np,.ksc img.np{transform:translateX(-50%) scaleX(-1)}
+.mdg.np{height:72%}.mdg.np.play{height:66%}
+.nmp img.np,.kbh img.np{scale:-1 1}
+.mdg.np{animation-name:mdgin}@keyframes mdgin{from{opacity:0;transform:translateX(calc(-50% + 26px)) scaleX(-1)}}
