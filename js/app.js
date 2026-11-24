@@ -180,13 +180,15 @@ const per=n?1-d/n:.6;return {sp,ex,co,cr,bu,pct:Math.round(32+67*(.45*(.2*sp+.2*
 const rank=()=>Object.keys(B).sort((a,b)=>fit(b).pct-fit(a).pct),best=()=>rank()[0];
 function ready(pf=S.pf){const v=[['空間',{small:3,elevator:5,house:8,yard:10}[pf.home]||5],['家庭',{1:3,2:5,3:8,5:9}[pf.members]||5],['時間',{1:2,2:4,3:7,4:9}[pf.athome]||5],['假日',{low:8,high:4}[pf.outing]||5],['預算',{1:3,2:5,3:8,4:10}[pf.budget]||5]];return {v,pct:Math.round(v.reduce((a,x)=>a+x[1],0)/(v.length*10)*100)}}
 const mp=()=>`<span class="mp">目前最合拍<b>${S.b} ${fit(S.b).pct}%</b></span>`;
+/* 配對：六種狗用新圖（主卡：公園邀玩／客廳站立；小卡站立；背面與取名坐下），柴犬、柯基用原圖 */
+const mdog=(b,p,cls,old)=>{const k=b.k,h=NPH[k];return h?`src="${A[k+'_'+p]}" class="${cls} np ${p}"`:`src="${old||A[k]}" class="${cls}"`};
 function mtop(){const k=S.b,b=B[k],f=fit(k),r=ready(),no=Object.keys(B).indexOf(k)+1,park=b.e>=4,C=2*Math.PI*42,
 chips=[['小型','中型','大型'][SZ(b)-1],'運動 '+['低','低','中','高','高'][b.e-1],'陪伴 '+(b.a<=2?'高':b.a==3?'中':'低'),'掉毛 '+(b.s<=2?'低':b.s==3?'中':'高'),'壽命 '+LS[k]+' 歲'],
 chk=[[f.sp,f.sp>=.85?'空間剛好':f.sp>=.6?'空間偏緊，要多帶牠出門':'空間明顯不足'],[f.ex,f.ex>=.85?'運動量跟得上':f.ex>=.6?'運動量要多安排':'運動量恐怕不夠'],[f.co,f.co>=.85?'陪伴時間足夠':f.co>=.6?'陪伴時間稍嫌不足':'獨處時間恐怕太長'],[f.cr,f.cr>=.85?'家人能分擔照顧':f.cr>=.6?'照顧要靠你多費心':'照顧負擔偏重'],[f.bu,f.bu>=.85?'預算寬裕':f.bu>=.6?'預算要精打細算':'每月花費恐怕超出預算']];
 root.style.setProperty('--ac',b.ac);
 $('#mtop').innerHTML=`<div class="mhd"><div><button class="mbk" data-a="mback">← 重新評估</button><small>${k==S.best?'YOUR BEST MATCH':'YOUR PICK'}</small><h1>${k==S.best?'和你最合拍的牠':'也值得考慮的牠'}</h1></div>
 <div class="rdy"><div class="rg2"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#F6E6D0" stroke-width="10"/><circle cx="50" cy="50" r="42" fill="none" stroke="#EE8A34" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C*r.pct/100} ${C}" transform="rotate(-90 50 50)"/></svg><b>${r.pct}<small>%</small></b></div><div><em>READINESS</em><p>${r.pct>=75?'準備得很充分。':r.pct>=50?'有空間，也有需要調整的地方。':'還有不少地方要先準備。'}</p><div class="rb">${r.v.map(([n,x])=>`<div>${n}<i><s style="width:${x*10}%"></s></i><span>${x}/10</span></div>`).join('')}</div></div></div></div>
-<div class="mcard"><div class="msc"><div class="sl on" style="background-image:url(${park?A.park:A.home})"></div><div class="bdg"><b>${f.pct}</b>% 契合</div><div class="stgm">${park?'公園':'客廳'}・午後</div><img class="mdg" src="${A[b.k]}" alt="${k}"></div>
+<div class="mcard"><div class="msc"><div class="sl on" style="background-image:url(${park?A.park:A.home})"></div><div class="bdg"><b>${f.pct}</b>% 契合</div><div class="stgm">${park?'公園':'客廳'}・午後</div><img ${mdog(b,park?'play':'stand','mdg')} alt="${k}"></div>
 <div class="mif"><small>NO.0${no} · ${b.en}</small><h2>${k}</h2><div class="chips">${chips.map(c=>`<span>${c}</span>`).join('')}</div><div class="chk">${chk.map(([v,t])=>`<div><i class="${v>=.75?'':'w'}">${v>=.75?'✓':'!'}</i>${t}</div>`).join('')}</div><button class="tr2" data-a="mgo">就是牠了 →</button></div></div>`}
 const ICO=['米克斯','馬爾濟斯','貴賓犬','博美犬','柯基犬','柴犬','哈士奇','黃金獵犬'];
 const PW=n=>`<div class="kp">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div>`,PW3=n=>`<div class="kp">${[1,2,3].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div>`,LV=['低','低','中','高','高'];
@@ -195,11 +197,11 @@ function kcard(k){const b=B[k],no=Object.keys(B).indexOf(k)+1,sz=SZ(b),szn=['小
 M=(l,w,p)=>`<div><b>${l}</b>${p}<em>${w}</em></div>`;
 return `<div class="kc ${on?'on':''}" data-a="kpick" data-v="${k}" role="button" tabindex="0" aria-label="選擇${k}，翻面看照顧重點" style="--c:${b.ac}"><div class="kin">
 <div class="kf"><div class="kt"><b>NO.0${no}${k==S.best?'<u>BEST</u>':''}</b></div>
-<div class="ksc"><i class="kpc">${fit(k).pct}<small>% 契合</small></i><img src="${A[b.k]}" alt="${k}"></div>
+<div class="ksc"><i class="kpc">${fit(k).pct}<small>% 契合</small></i><img ${mdog(b,'stand','')} alt="${k}"></div>
 <div class="kn"><h3>${k}</h3><small>${b.en}</small></div>
 <div class="km">${M('體型',szn,PW3(sz))}${M('運動',LV[ex-1],PW(ex))}${M('陪伴',nd>=4?'高需求':nd==3?'中':'低需求',PW(nd))}${M('掉毛',LV[sh-1],PW(sh))}</div>
 <div class="kst">${kstT(on)}</div></div>
-<div class="kb" data-a="kflip"><div class="kbh"><img src="${A['ic_'+b.k]}" alt=""><div><small>${b.tag} · 壽命 ${LS[k]} 歲</small><h4>${k}</h4></div></div>
+<div class="kb" data-a="kflip"><div class="kbh"><img ${mdog(b,'sit','',A['ic_'+b.k])} alt=""><div><small>${b.tag} · 壽命 ${LS[k]} 歲</small><h4>${k}</h4></div></div>
 <h5>CARE · 四個照顧需求</h5><ul class="kbn"><li><b>運動</b><span>${b.n.act}</span></li><li><b>陪伴</b><span>${b.n.alone}</span></li><li><b>毛髮</b><span>${b.n.care}</span></li><li><b>花費</b><span>${b.n.cost}</span></li></ul>
 <div class="kbr"><b>REMINDER · 飼養提醒</b>${b.n.train}</div>
 <button class="kbk" data-a="kflip" aria-label="翻回正面">↻ 翻回正面</button></div></div></div>`}
@@ -214,7 +216,7 @@ if(first)c._kt=setTimeout(()=>{if(!c.isConnected)return;kflip(c,0);c._kt=setTime
 function match(keep){const ord=rank();S.best=ord[0];if(!keep)S.b=ord[0];
 app.innerHTML=nav(1)+`<main class="mtc"><section class="mtop" id="mtop"></section><section class="mbot" id="kbot"><p class="ot9">八位毛孩<small>點卡片認識牠，也可以換一隻。</small></p><div class="kg">${ord.map(kcard).join('')}</div></section></main>`;mtop();scrollTo(0,0)}
 function nameModal(){if($('.nmd'))return;const k=S.b,b=B[k],m=document.createElement('div');m.className='nmd';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');
-m.innerHTML=`<div class="nmb"><button class="nx" data-a="nmx" aria-label="關閉">×</button><div class="nmp" style="--c:${b.ac}"><img src="${k=='柴犬'?A.shF:A[b.k]}" alt="${k}"></div><small>NAME · IT</small><h2>替牠取個名字</h2><p>${k}・契合度 ${fit(k).pct}%</p><input class="nm2" id="nm2" maxlength="8" placeholder="小白" value="${S.name}" autocomplete="off"><div class="chp">${['小白','麻糬','黑糖','棉花','豆花','可樂'].map(n=>`<button data-a="nmchip" data-v="${n}">${n}</button>`).join('')}</div><button class="go" data-a="nmgo">開始 30 天 →</button></div>`;
+m.innerHTML=`<div class="nmb"><button class="nx" data-a="nmx" aria-label="關閉">×</button><div class="nmp" style="--c:${b.ac}"><img ${mdog(b,'sit','',k=='柴犬'?A.shF:A[b.k])} alt="${k}"></div><small>NAME · IT</small><h2>替牠取個名字</h2><p>${k}・契合度 ${fit(k).pct}%</p><input class="nm2" id="nm2" maxlength="8" placeholder="小白" value="${S.name}" autocomplete="off"><div class="chp">${['小白','麻糬','黑糖','棉花','豆花','可樂'].map(n=>`<button data-a="nmchip" data-v="${n}">${n}</button>`).join('')}</div><button class="go" data-a="nmgo">開始 30 天 →</button></div>`;
 m.addEventListener('click',e=>{if(e.target===m)m.remove()});app.append(m);const i=$('#nm2');i.addEventListener('keydown',e=>{if(e.key=='Enter'){S.name=i.value.trim()||'小白';play()}else if(e.key=='Escape')m.remove()});setTimeout(()=>i.focus(),250);burst(innerWidth/2,innerHeight/2)}
 function stopAll(){clearInterval(S.iv);clearTimeout(S.at);clearInterval(S.rv);clearTimeout(S.pt);S.pop=0;S.pend=0}
 function init(){const p=S.pf,sm=({1:50,2:60,3:75,4:88}[p.athome]||60)-({low:0,high:12}[p.outing]||0),u={1:12,2:40,3:60,5:72}[p.members]||40;
