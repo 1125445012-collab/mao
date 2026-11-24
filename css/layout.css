@@ -211,3 +211,5 @@
 /* 回憶錄頁：SKIP 讓開「查看模擬評估表」 */
 body:has(.mm) #tskip{bottom:14px!important}
 @media(min-width:761px){body:has(.mm[data-st="1"]) #tskip{left:270px}}
+/* 換姿態時直接換，不要先用舊高度撐大 */
+.lf .scn .dogw{transition:none}
