@@ -234,3 +234,16 @@ body:has(.mm) #tskip{bottom:14px!important}
 .hs{container-type:size}.cam{--k:min(100cqw/2576,100cqh/1248);--u:min(100cqw/5152 + 100cqh/2496,var(--k)*1.1)}
 @media(min-width:821px) and (min-aspect-ratio:6/5){.hs{left:0;top:0;width:100%;height:100%;aspect-ratio:auto;transform:none}}
 .cvf .top{border-bottom:0}
+/* 導覽列六個階段：寬度不夠時先縮間距，再只顯示目前階段的標題 */
+.dk[data-ms]{cursor:pointer}.dk[data-ms]:hover{color:var(--ink9)}.dk[data-ms]:hover>span::after{transform:scaleX(.4)}.dk.on[data-ms]>span::after{transform:scaleX(1)}
+@media(max-width:1559px){.dk{font-size:12.5px;gap:6px;padding:0 2px;letter-spacing:.06em}.dk+.dk{margin-left:24px}.dk+.dk::before{width:12px;right:calc(100% + 6px)}}
+@media(max-width:1399px){#rps::after{content:none}#rps{padding:0 10px}}
+@media(max-width:1279px){.dk+.dk{margin-left:18px}.dk+.dk::before{width:8px;right:calc(100% + 5px)}}
+@media(max-width:1139px){.dk>span{display:none}.dk.on>span{display:block}.dk+.dk{margin-left:24px}.dk+.dk::before{width:12px;right:calc(100% + 6px)}}
+@media(max-width:760px){
+.top{padding:0 58px 0 12px;gap:8px}.cvf .top{padding-right:104px}#snd::after,#snd.off::after{content:none}
+.dk{height:54px;padding:0}.dk b{width:22px;height:22px;font-size:9.5px}.dk+.dk{margin-left:9px}.dk+.dk::before{width:5px;right:calc(100% + 2px)}
+.dk>span,.dk.on>span{display:none}.dk>b,.dk>.paw{transform:translateY(-6px)}.dk+.dk::before{margin-top:-6px}
+.dk.on>span{display:block;position:absolute;left:50%;top:37px;transform:translateX(-50%);font-size:9.5px;letter-spacing:.02em}.dk.on>span::after{bottom:-4px;height:1.5px}
+.dk:last-child.on>span{left:auto;right:-14px;transform:none}
+}
