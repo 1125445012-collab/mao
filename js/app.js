@@ -93,13 +93,15 @@ const COVBG=`<svg class="bgs" viewBox="0 0 2068 1002" preserveAspectRatio="none"
 const CVO=[['bowl','cvBowl',163,138,334,139,'fl'],['bag','cvBag',92,483,262,283,'fl'],['bed','cvBed',317,776,320,192,'fl'],['collar','cvCollar',254,1051,204,152,'fl'],['house','cvHouse',610,896,381,274,'hse'],['ttK','cvTK',499,394,1153,321,'ttl'],['ttG','cvTG',499,394,1153,321,'ttl'],['pgC','cvC',1762,219,176,178,'fl'],['pgB','cvB',1921,108,169,86,'fl'],['pgA','cvA',1553,-44,322,172,'fl'],['dog','cvDog',1706,133,832,1115,'dgo'],['cal','cvCal',2103,-48,524,513,'calo']];
 let CVA=[],CVT=[];
 function cvStop(){CVA.forEach(a=>{try{a.cancel()}catch(e){}});CVA=[];CVT.forEach(clearTimeout);CVT=[]}
+/* 封面物件的對齊點 [左右,上下]：背景鋪滿視窗時，狗和房子貼地、日曆貼上緣，其他以中心對齊 */
+const CVX=k=>k=='dog'||k=='house'?[.5,1]:k=='cal'?[.5,0]:k=='pgC'?[.1,0]:[.5,.5];
 function cover(){S.step=0;S.kseen={};S.b='柴犬';cvStop();window.bgmRestart&&bgmRestart();
-const cvh=CVO.map(([k,a,x,y,w,h,c],i)=>`<div class="cvo ${c} ${k=='dog'?'':''}" data-k="${k}" style="left:${x/25.76}%;top:${y/12.48}%;width:${w/25.76}%;--t:${(4.4+i*.37%2.6).toFixed(2)}s;--l:${(-i*.7).toFixed(1)}s;--dy:${i%2?-2.4:-3.2}%;--r0:${i%2?-1.2:1}deg;--r1:${i%2?1:-1.2}deg"><div class="cvi"><img src="${A[a]}" alt="" draggable="false"></div></div>`).join('');
+const cvh=CVO.map(([k,a,x,y,w,h,c],i)=>`<div class="cvo ${c} ${k=='dog'?'':''}" data-k="${k}" style="left:calc(${x+w*CVX(k)[0]}/2576*100cqw - ${w*CVX(k)[0]}*var(--s));top:calc(${y+h*CVX(k)[1]}/1248*100cqh - ${h*CVX(k)[1]}*var(--s));width:calc(${w}*var(--s));--s:var(${c=='ttl'?'--k':'--u'});--t:${(4.4+i*.37%2.6).toFixed(2)}s;--l:${(-i*.7).toFixed(1)}s;--dy:${i%2?-2.4:-3.2}%;--r0:${i%2?-1.2:1}deg;--r1:${i%2?1:-1.2}deg"><div class="cvi"><img src="${A[a]}" alt="" draggable="false"></div></div>`).join('');
 app.innerHTML=`<section class="cvf" id="cv">${nav(-1)}<div class="hs" id="hs"><div class="cam" id="cam"><img class="hbg" src="${A.cvBg}" alt="毛評估所">${cvh}</div></div><div class="cmf"><h1 class="cmh2">領養前，<br>先過 <em>30</em> 天。</h1><p class="cms2"><b>30 DAYS</b>養一隻狗的 30 天日曆</p><button class="go" data-a="start">開始體驗 →</button></div><div class="rwf">${Object.values(B).map(b=>`<img src="${A[b.k]}" alt="">`).join('')}</div></section>`;scrollTo(0,0);cvPlay()}
 function cvPlay(){const cv=$('#cv'),hs=$('#hs'),cam=$('#cam');if(!hs)return;
 const fin=()=>{cvStop();cv.classList.add('idle','cta')};
 if(RM||matchMedia('(prefers-reduced-motion:reduce)').matches){fin();return}
-const k=hs.clientWidth/2576,q=n=>hs.querySelector('[data-k="'+n+'"]'),I=n=>q(n).firstElementChild;
+const kx=hs.clientWidth/2576,ky=hs.clientHeight/1248,k=Math.min((kx+ky)/2,1.1*Math.min(kx,ky)),q=n=>hs.querySelector('[data-k="'+n+'"]'),I=n=>q(n).firstElementChild;
 const an=(el,kf,o)=>{const a=el.animate(kf,Object.assign({fill:'both',easing:'linear'},o));CVA.push(a);return a};
 const OUT=t=>1-Math.pow(1-t,3),px=v=>(v*k).toFixed(1)+'px';
 // camera: start zoomed on the house, then pull back
@@ -109,7 +111,7 @@ an(cam,[{transform:`translate(${(.5-S0*cx)*100}%,${(.5-S0*cy)*100}%) scale(${S0}
 an(q('house'),[{transform:'scale(.4)',opacity:0},{transform:'scale(1.1,.94)',opacity:1,offset:.55},{transform:'scale(.97,1.04)',offset:.78},{transform:'scale(1)',opacity:1}],{duration:800,easing:'ease-out'});
 [800,1400,2000,2600].forEach(t=>an(q('house'),[{transform:'scale(1)'},{transform:'scale(1.07,.9)',offset:.4},{transform:'scale(.95,1.08)',offset:.72},{transform:'scale(1)'}],{delay:t,duration:520,easing:'ease-in-out'}));
 // spit out items from the door (hero px 867,1075)
-const DX=867,DY=1075,fly=(n,t0,dur,arc,rot)=>{const [x,y,w,h]=CVO.find(c=>c[0]==n).slice(2,6),fx=DX-(x+w/2),fy=DY-(y+h/2),kf=[];
+const DX=867,DY=1075,fly=(n,t0,dur,arc,rot)=>{const [x,y,w,h]=CVO.find(c=>c[0]==n).slice(2,6),fx=(DX-(x+w/2))*kx/k,fy=(DY-(y+h/2))*ky/k,kf=[];
 for(let i=0;i<=18;i++){const t=i/18,e=OUT(t),sc=Math.min(1,.12+.88*Math.min(1,e*1.35));
 kf.push({offset:t,opacity:t<.04?0:1,transform:`translate(${px(fx*(1-e))},${px(fy*(1-e)-arc*4*e*(1-e))}) rotate(${(rot*(1-e)).toFixed(1)}deg) scale(${sc.toFixed(3)})`})}
 an(q(n),kf,{delay:t0,duration:dur,easing:'cubic-bezier(.3,.1,.5,1)'});
@@ -121,7 +123,7 @@ an(q('ttG'),[{opacity:0,transform:`translateY(${px(150)}) scale(.96)`},{opacity:
 // calendar drops from above and swings to rest
 an(q('cal'),[{transform:`translateY(${px(-760)}) rotate(-14deg)`},{transform:`translateY(${px(24)}) rotate(5deg)`,offset:.55,easing:'ease-in'},{transform:'translateY(-1.5%) rotate(-2.8deg)',offset:.72},{transform:'translateY(.6%) rotate(1.2deg)',offset:.86},{transform:'translateY(0) rotate(0)'}],{delay:3300,duration:1300,easing:'cubic-bezier(.4,0,.8,.6)'});
 // loose sheets flip out of the calendar (page-turn)
-const flip=(n,t0,rx,ry)=>{const [x,y,w,h]=CVO.find(c=>c[0]==n).slice(2,6),fx=2330-(x+w/2),fy=220-(y+h/2);
+const flip=(n,t0,rx,ry)=>{const [x,y,w,h]=CVO.find(c=>c[0]==n).slice(2,6),fx=(2330-(x+w/2))*kx/k,fy=(220-(y+h/2))*ky/k;
 an(q(n),[{opacity:0,transform:`translate(${px(fx)},${px(fy)}) perspective(800px) rotateX(0) rotateY(0) rotate(0) scale(.25)`},{opacity:1,offset:.12},{opacity:1,transform:`translate(${px(fx*.35)},${px(fy*.35-70)}) perspective(800px) rotateX(${rx*.5}deg) rotateY(${ry*.5}deg) rotate(-90deg) scale(.7)`,offset:.5},{opacity:1,transform:'translate(0,0) perspective(800px) rotateX(0) rotateY(0) rotate(0) scale(1)'}],{delay:t0,duration:1200,easing:'cubic-bezier(.25,.6,.3,1)'})};
 flip('pgB',4500,-540,180);flip('pgA',4650,540,-200);flip('pgC',4800,-360,360);
 // dog runs in from beyond the right edge
