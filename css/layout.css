@@ -222,3 +222,11 @@ body:has(.mm) #tskip{bottom:14px!important}
 .mdg.np{height:72%}.mdg.np.play{height:66%}
 .nmp img.np,.kbh img.np{scale:-1 1}
 .mdg.np{animation-name:mdgin}@keyframes mdgin{from{opacity:0;transform:translateX(calc(-50% + 26px)) scaleX(-1)}}
+/* 柴犬、柯基 SVG：半身圖貼齊下緣；朝左的翻成朝右 */
+.qz-dog.sv img{object-position:50% 100%}.qz-dog.sv.mir img{scale:-1 1}
+.qz-dog.sv.cgS::before{left:24%;right:24%}
+.qz-dog.bust{bottom:-2px}.qz-dog.bust::before{display:none}.qz-dog.bust .qz-mp{bottom:4%}
+.mdg.sv,.ksc img.sv{object-position:50% 100%}.mdg.sv{height:66%}.mdg.sv:not(.np){height:62%}
+.lf .scn .dogw[data-bust="1"]{bottom:-14px}
+@media(max-width:900px){.lf .scn .dogw[data-bust="1"]{bottom:25%}}
+@media(max-width:760px){.qz-dog.sv img{top:auto;bottom:0;height:88%}.qz-dog.bust{margin-bottom:-8px}.qz-dog.bust .qz-mp{bottom:auto}}
