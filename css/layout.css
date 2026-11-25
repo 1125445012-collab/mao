@@ -247,3 +247,5 @@ body:has(.mm) #tskip{bottom:14px!important}
 .dk.on>span{display:block;position:absolute;left:50%;top:37px;transform:translateX(-50%);font-size:9.5px;letter-spacing:.02em}.dk.on>span::after{bottom:-4px;height:1.5px}
 .dk:last-child.on>span{left:auto;right:-14px;transform:none}
 }
+/* 家庭分工：一格放兩張 */
+.fdp{flex-wrap:wrap;gap:6px;align-content:center}.fas{padding:6px 6px 6px 12px;white-space:nowrap}
