@@ -186,6 +186,16 @@ S.owner={n,a:ag,w:$('#rgw',m).value,p:$('#rgp',m).value,ok:1};S.ex=RGT[S.owner.w
 ['rgn','rga'].forEach(id=>$('#'+id,m).addEventListener('input',()=>err(id,'')));$('#rgok',m).addEventListener('change',()=>err('rgok',''));
 $('.rgh',m).addEventListener('click',()=>{m.remove();cover()});
 document.body.append(m);setTimeout(()=>{const i=$('#rgn',m);if(i&&!i.value)i.focus()},350)}
+/* 小飼主名牌：登記後整個流程固定在畫面右下角。不能點（點擊會穿過去）；底下有按鈕或文字時自動變淡，不擋內容 */
+const OWB=document.createElement('div');OWB.id='owb';OWB.hidden=true;OWB.setAttribute('aria-hidden','true');document.body.append(OWB);
+const OWI='<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#F2C46D"/><circle cx="20" cy="23" r="11" fill="#FBE3C8"/><path d="M8.5 21c-.4-8.6 4.6-14 11.5-14s11.9 5.4 11.5 14c-2.6-4.4-6.6-6.6-11.5-6.6S11.1 16.6 8.5 21z" fill="#3B2A20"/><circle cx="16" cy="24" r="1.4" fill="#3B2A20"/><circle cx="24" cy="24" r="1.4" fill="#3B2A20"/><path d="M17.2 28q2.8 2 5.6 0" stroke="#3B2A20" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>',
+OWHIT='button,a,input,select,textarea,label,[data-a],[data-m],[data-f],[role=button],.opt,.cd,.kc,.pl,h1,h2,h3,p,b,small,span,em,strong,li,img';
+function owbUpd(){const o=S.owner;if(!o||$('.rgm')||$('#cv')||$('.intro')){OWB.hidden=true;return}
+const pet=S.name&&$('.lf,.mm,.fw')?S.name:S.b+'（還沒取名）',h=`${OWI}<div><b>嗨！${o.n}</b><small>守護對象：${pet}</small></div>`;
+if(OWB._h!==h){OWB.innerHTML=h;OWB._h=h}OWB.hidden=false;
+const r=OWB.getBoundingClientRect();let hit=false;const pts=[];for(let ix=0;ix<5;ix++)for(let iy=0;iy<3;iy++)pts.push([r.left+6+(r.width-12)*ix/4,r.top+6+(r.height-12)*iy/2]);for(const [x,y] of pts){const el=document.elementFromPoint(x,y);if(el&&el!==document.body&&el.closest(OWHIT)&&!el.closest('#tskip')){hit=true;break}}
+OWB.classList.toggle('dim',hit)}
+setInterval(owbUpd,300);addEventListener('resize',owbUpd);addEventListener('scroll',owbUpd,true);
 /* 評估題卡上的登記資訊：心願、想養的狗與牠目前的契合度 */
 const qme=()=>{const o=S.owner;if(!o)return'';const p=o.p&&B[o.p]?`<span>想養：<b>${o.p}</b>${S.step>0?`・目前 ${fit(o.p).pct}%`:''}</span>`:'';return `<p class="qz-me"><span>心願：<b>${o.w}</b></span>${p}</p>`};
 function setup(){if(S.step<4)S.b=best();if(S.step==0&&!S.reg)setTimeout(regModal,0);const s=ST[S.step],i=S.step,N=ST.length-1,two=s.o&&s.o.length==2;
