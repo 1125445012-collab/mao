@@ -7,9 +7,12 @@ rnd=a=>a[Math.random()*a.length|0],ck=el=>{if(el)el.click();return !!el};
 let busy=0;
 function auto(){if(busy)return;busy=1;const sp0=S.sp;S.sp=4;root.style.setProperty('--t',.25);let n=0;
 const iv=setInterval(()=>{n++;if($('.fw')||$('.mm')||n>600){clearInterval(iv);busy=0;S.sp=sp0;root.style.setProperty('--t',1/(sp0||1));return}
+const pm=$('.ptm');if(pm){ck($('[data-pt=x]',pm));return}
 const pop=$('.pop');if(pop){const d=$('.ops.dn',pop);if(!d)ck(rnd($$('.opt',pop)));else{const c=$('[data-a=pclose]',pop);if(c&&!c.closest('[hidden]'))c.click()}return}
 const lf=$('.leaf:not(.tear)');if(!lf)return;const ops=$('.ops',lf);if(ops&&!ops.classList.contains('dn')){const o=rnd($$('.opt',ops));ck(o);clearTimeout(S.at);tear(lf)}else if(!ops)tear(lf)},160)}
 bt.addEventListener('click',()=>{
+const fs=$('.fsv');if(fs){if(!$('[name=q1]:checked',fs))ck(rnd($$('[name=q1]',fs)));if(!$('[name=q2]:checked',fs))ck(rnd($$('[name=q2]',fs)));ck($('.rgo',fs));return}
+const pm=$('.ptm');if(pm){ck($('[data-pt=x]',pm));return}
 const rg=$('.rgm');if(rg){const v=(id,x)=>{const el=$('#'+id,rg);if(!el.value)el.value=x};v('rgn','測試');v('rga','10');$('#rgok',rg).checked=true;$('.rgo',rg).click();return}
 const mm=$('.mm');
 if(mm){const s=+mm.dataset.st;if(s==1)ck($('[data-m=dn]',mm));else if(s==2)ck($('[data-m=l3]',mm));else say2('已經是最後一頁了');return}
