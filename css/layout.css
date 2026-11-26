@@ -279,3 +279,11 @@ body:has(.rgm) #tskip{z-index:99999}
 .mwant{margin:12px 0 0;padding:10px 14px;border-radius:14px;background:#FBEBD2;font:500 13.5px/1.6 var(--sans);color:#6b5846}.mwant b{color:var(--ink9)}.mwant.ok{background:#E4EFD9;color:#3E6B3A}
 .mwant button{margin-left:6px;font:700 13px var(--sans);color:var(--ink9);text-decoration:underline;text-underline-offset:4px}
 .kt u.lk{background:var(--or);color:#fff}
+/* 小飼主名牌：右下角固定（內容在 app.js 的 owbUpd）；pointer-events:none 不擋點擊，壓到內容時變淡 */
+#owb{position:fixed;z-index:205;right:16px;bottom:16px;height:58px;display:flex;align-items:center;gap:11px;padding:0 22px 0 7px;border-radius:99px;background:#FFF8EC;border:2px solid #EBA53B;color:var(--ink9);pointer-events:none;user-select:none;-webkit-user-select:none;transition:opacity .25s;animation:in .4s both}
+#owb[hidden]{display:none}
+#owb svg{flex:none;width:44px;height:44px}
+#owb b{display:block;font:800 16px/1.25 var(--sans);white-space:nowrap;max-width:10em;overflow:hidden;text-overflow:ellipsis}
+#owb small{display:block;margin-top:2px;font:700 12.5px/1.3 var(--sans);color:#9A5B1E;white-space:nowrap;max-width:14em;overflow:hidden;text-overflow:ellipsis}
+#owb.dim{opacity:.35}
+@media(max-width:760px){#owb{right:12px;bottom:12px;height:52px;gap:9px;padding:0 18px 0 6px}#owb svg{width:38px;height:38px}#owb b{font-size:15px}#owb small{font-size:12px}}
