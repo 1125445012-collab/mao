@@ -95,7 +95,7 @@ let CVA=[],CVT=[];
 function cvStop(){CVA.forEach(a=>{try{a.cancel()}catch(e){}});CVA=[];CVT.forEach(clearTimeout);CVT=[]}
 /* 封面物件的對齊點 [左右,上下]：背景鋪滿視窗時，狗和房子貼地、日曆貼上緣，其他以中心對齊 */
 const CVX=k=>k=='dog'||k=='house'?[.5,1]:k=='cal'?[.5,0]:k=='pgC'?[.1,0]:[.5,.5];
-function cover(){S.step=0;S.kseen={};S.b='柴犬';cvStop();window.bgmRestart&&bgmRestart();
+function cover(){S.step=0;S.reg=0;S.owner=null;const rg=$('.rgm');if(rg)rg.remove();S.kseen={};S.b='柴犬';cvStop();window.bgmRestart&&bgmRestart();
 const cvh=CVO.map(([k,a,x,y,w,h,c],i)=>`<div class="cvo ${c} ${k=='dog'?'':''}" data-k="${k}" style="left:calc(${x+w*CVX(k)[0]}/2576*100cqw - ${w*CVX(k)[0]}*var(--s));top:calc(${y+h*CVX(k)[1]}/1248*100cqh - ${h*CVX(k)[1]}*var(--s));width:calc(${w}*var(--s));--s:var(${c=='ttl'?'--k':'--u'});--t:${(4.4+i*.37%2.6).toFixed(2)}s;--l:${(-i*.7).toFixed(1)}s;--dy:${i%2?-2.4:-3.2}%;--r0:${i%2?-1.2:1}deg;--r1:${i%2?1:-1.2}deg"><div class="cvi"><img src="${A[a]}" alt="" draggable="false"></div></div>`).join('');
 app.innerHTML=`<section class="cvf" id="cv">${nav(-1)}<div class="hs" id="hs"><div class="cam" id="cam"><img class="hbg" src="${A.cvBg}" alt="毛評估所">${cvh}</div></div><div class="cmf"><h1 class="cmh2">領養前，<br>先過 <em>30</em> 天。</h1><p class="cms2"><b>30 DAYS</b>養一隻狗的 30 天日曆</p><button class="go" data-a="start">開始體驗 →</button></div><div class="rwf">${Object.values(B).map(b=>`<img src="${A[b.k]}" alt="">`).join('')}</div></section>`;scrollTo(0,0);cvPlay()}
 function cvPlay(){const cv=$('#cv'),hs=$('#hs'),cam=$('#cam');if(!hs)return;
@@ -166,7 +166,27 @@ const QZP=['stand','sit','stand','play','sit','sit'];
 function qdog(i){const k=B[S.b].k,h=NPH[k],p=QZP[i];if(!qdog.pre){qdog.pre=1;Object.keys(NPH).forEach(n=>['stand','sit','play'].forEach(q=>{new Image().src=A[n+'_'+q]}))}
 const v=SVP[k];if(v){const s=v.quiz[i];return `<div class="qz-dog sv${SVB.includes(s)?' bust':''}${SVF.includes(s)?' mir':''} ${s}" id="qzd"><img src="${A[s]}" alt="${S.b}">`}
 return h?`<div class="qz-dog np ${p}" id="qzd"><img src="${A[k+'_'+p]}" style="height:${Math.min(112,104*h[p]/h.stand).toFixed(1)}%" alt="${S.b}">`:`<div class="qz-dog" id="qzd"><img src="${A[k]}" alt="${S.b}">`}
-function setup(){if(S.step<4)S.b=best();const s=ST[S.step],i=S.step,N=ST.length-1,two=s.o&&s.o.length==2;
+/* 小飼主登記表：進入評估第 1 題前填寫一次（回首頁後重新填） */
+const RGW=['散步、逛公園','在家陪伴、一起放鬆','一起出遊、旅行','教牠新把戲','拍照、留下紀錄'];
+function regModal(){if($('.rgm'))return;const o=S.owner||{},m=document.createElement('div');m.className='rgm';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.setAttribute('aria-labelledby','rgt');
+const sz=b=>['小型犬','中型犬','大型犬'][SZ(b)-1];
+m.innerHTML=`<form class="rgb" novalidate><div class="rgi" aria-hidden="true"><svg viewBox="0 0 40 40"><ellipse cx="20" cy="26" rx="8.5" ry="7" fill="currentColor"/><ellipse cx="9.5" cy="17" rx="3.6" ry="4.6" transform="rotate(-18 9.5 17)" fill="currentColor"/><ellipse cx="16" cy="11" rx="3.6" ry="4.8" transform="rotate(-6 16 11)" fill="currentColor"/><ellipse cx="24" cy="11" rx="3.6" ry="4.8" transform="rotate(6 24 11)" fill="currentColor"/><ellipse cx="30.5" cy="17" rx="3.6" ry="4.6" transform="rotate(18 30.5 17)" fill="currentColor"/></svg></div>
+<small class="rge0">OWNER · REGISTRATION</small><h2 id="rgt">歡迎來到「毛評估所」</h2><p class="rgs">在開始評估之前，請先填寫小飼主登記表！</p>
+<div class="rgg"><label class="rgf"><span>小飼主姓名 <b>*</b></span><input id="rgn" maxlength="10" placeholder="例如：小毛" autocomplete="off" value="${o.n||''}"><em></em></label>
+<label class="rgf"><span>小飼主年齡 <b>*</b></span><input id="rga" type="number" inputmode="numeric" min="1" max="120" placeholder="例如：9" value="${o.a||''}"><em></em></label>
+<label class="rgf"><span>最想和毛孩一起做的事</span><select id="rgw">${RGW.map(x=>`<option${o.w==x?' selected':''}>${x}</option>`).join('')}</select></label>
+<label class="rgf"><span>心中想養的狗狗</span><select id="rgp"><option value="">還不確定</option>${Object.keys(B).map(k=>`<option value="${k}"${o.p==k?' selected':''}>${k}（${sz(B[k])}）</option>`).join('')}</select></label></div>
+<label class="rgk"><input type="checkbox" id="rgok"${o.ok?' checked':''}><span>我願意認真參與這 30 天的學習與實作，了解養狗狗需要每天餵食、散步、清理、看醫生與陪伴，做一個有責任感的小飼主！</span></label><em class="rge" id="rge"></em>
+<button type="submit" class="rgo">歡迎小飼主，開始評估！</button><button type="button" class="rgh">← 回首頁</button></form>`;
+const f=$('form',m),err=(id,t)=>{const el=id=='rgok'?$('#rge',m):$('#'+id,m).parentElement.querySelector('em');el.textContent=t||'';if(id!='rgok')$('#'+id,m).classList.toggle('bad',!!t)};
+f.addEventListener('submit',ev=>{ev.preventDefault();const n=$('#rgn',m).value.trim(),a=$('#rga',m).value.trim(),ag=+a,ok=$('#rgok',m).checked;
+err('rgn',n?'':'請填寫小飼主的名字');err('rga',!a?'請填寫年齡':(ag>=1&&ag<=120&&Number.isInteger(ag))?'':'請填 1 到 120 的數字');err('rgok',ok?'':'請勾選上面的承諾，才能開始評估');
+const bad=[!n&&'rgn',(!a||!(ag>=1&&ag<=120&&Number.isInteger(ag)))&&'rga',!ok&&'rgok'].find(Boolean);if(bad){$('#'+bad,m).focus();return}
+S.owner={n,a:ag,w:$('#rgw',m).value,p:$('#rgp',m).value,ok:1};S.reg=1;m.classList.add('out');setTimeout(()=>m.remove(),RM?0:300);const r=$('.rgo',m).getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2)});
+['rgn','rga'].forEach(id=>$('#'+id,m).addEventListener('input',()=>err(id,'')));$('#rgok',m).addEventListener('change',()=>err('rgok',''));
+$('.rgh',m).addEventListener('click',()=>{m.remove();cover()});
+document.body.append(m);setTimeout(()=>{const i=$('#rgn',m);if(i&&!i.value)i.focus()},350)}
+function setup(){if(S.step<4)S.b=best();if(S.step==0&&!S.reg)setTimeout(regModal,0);const s=ST[S.step],i=S.step,N=ST.length-1,two=s.o&&s.o.length==2;
 const cards=s.o?`<div class="cards ${two?'two':''}">${s.o.map((x,j)=>`<button class="cd ${S.pf[s.k]===x[0]?'on':''}" data-a="val" data-v="${x[0]}"><span class="op">OPTION 0${j+1}</span>${IC[s.k][x[0]]}<b>${x[1]}</b><small>${x[2]}</small></button>`).join('')}</div>`:`<div class="nmw"><input class="nm" id="nm" maxlength="8" placeholder="小白" value="${S.name}" autocomplete="off"><button class="go" data-a="go">下一步 →</button></div>`;
 app.innerHTML=nav(i==5?1:0)+`<main class="qz"><div class="qz-bg" style="background-image:url(${A[QZS[i]]})"></div>${qdog(i)}${i>0?`<span class="qz-mp">${i<5?`目前最合拍<b>${S.b} ${fit(S.b).pct}%</b>`:S.b}</span>`:''}</div><section class="qz-card"><div class="qz-top"><span class="qz-eb">${EB[i]}</span><div class="qz-paws">${ST.slice(0,N).map((_,j)=>`<i class="${j<i?'done':j==i?'now':''}"></i>`).join('')}</div></div><div class="qz-num"><b>${i+1}</b><span>/ ${N}</span></div><h1>${s.t}</h1><p>${SUBT[i]}</p>${cards}<div class="qz-foot"><button class="bk2" data-a="back">← 上一步</button></div></section></main>`;
 root.style.setProperty('--ac',B[S.b].ac);scrollTo(0,0)}

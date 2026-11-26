@@ -10,9 +10,11 @@ const iv=setInterval(()=>{n++;if($('.fw')||$('.mm')||n>600){clearInterval(iv);bu
 const pop=$('.pop');if(pop){const d=$('.ops.dn',pop);if(!d)ck(rnd($$('.opt',pop)));else{const c=$('[data-a=pclose]',pop);if(c&&!c.closest('[hidden]'))c.click()}return}
 const lf=$('.leaf:not(.tear)');if(!lf)return;const ops=$('.ops',lf);if(ops&&!ops.classList.contains('dn')){const o=rnd($$('.opt',ops));ck(o);clearTimeout(S.at);tear(lf)}else if(!ops)tear(lf)},160)}
 bt.addEventListener('click',()=>{
+const rg=$('.rgm');if(rg){const v=(id,x)=>{const el=$('#'+id,rg);if(!el.value)el.value=x};v('rgn','測試');v('rga','10');$('#rgok',rg).checked=true;$('.rgo',rg).click();return}
 const mm=$('.mm');
 if(mm){const s=+mm.dataset.st;if(s==1)ck($('[data-m=dn]',mm));else if(s==2)ck($('[data-m=l3]',mm));else say2('已經是最後一頁了');return}
 if($('.fw')){const f=$('.fw');if($('[data-f="1"]',f))ck($('[data-f="1"]',f));else if($('[data-f="2"]',f)){ck($('.fwa',f));ck($('[data-f="2"]',f))}else if($('[data-f="3"]',f)){ck($('.fwg',f));ck($('[data-f="3"]',f))}else ck($('[data-f="4"]',f));return}
+if($('.rgm')){const g=$('.rgm');if(!$('#rgn',g).value)$('#rgn',g).value='測試';if(!$('#rga',g).value)$('#rga',g).value='12';$('#rgok',g).checked=true;ck($('.rgo',g));return}
 if($('.nmd')){ck($('[data-a=nmgo]'));return}
 if($('.intro')){say2('開場動畫播放中，結束後再按');return}
 if($('.gm')||$('.leaf')){auto();say2('自動跑完 30 天…');return}
