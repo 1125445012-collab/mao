@@ -274,3 +274,8 @@ body:has(.mm) #tskip{bottom:14px!important}
 @media(max-width:560px){.rgb{border-radius:26px;padding:24px 16px 18px}.rgg{gap:12px}.rgg>.rgf:nth-child(n+3){grid-column:1/-1}.rgf input,.rgf select{height:46px;padding:0 13px}.rgi{width:52px;height:52px}.rgo{height:52px;font-size:15px}.rgk{padding:12px 14px}}
 body:has(.rgm) #tskip{z-index:99999}
 @media(max-width:760px){body:has(.rgm) #tskip{top:62px;bottom:auto!important}}
+/* 登記資訊進到評估與配對 */
+.qz-me{display:flex;flex-wrap:wrap;gap:6px 8px;margin:-8px 0 16px}.qz-me span{padding:5px 12px;border-radius:99px;background:#FBEBD2;font:500 12.5px/1.4 var(--sans);color:#6b5846}.qz-me b{color:var(--ink9);font-weight:700}
+.mwant{margin:12px 0 0;padding:10px 14px;border-radius:14px;background:#FBEBD2;font:500 13.5px/1.6 var(--sans);color:#6b5846}.mwant b{color:var(--ink9)}.mwant.ok{background:#E4EFD9;color:#3E6B3A}
+.mwant button{margin-left:6px;font:700 13px var(--sans);color:var(--ink9);text-decoration:underline;text-underline-offset:4px}
+.kt u.lk{background:var(--or);color:#fff}
