@@ -326,3 +326,75 @@ body:has(.rgm) #tskip{z-index:99999}
 .ach-rp .ach-t{background:#FBF4E8}.ach-rh .tr2{margin:0}
 @media(max-width:760px){#achb{padding:0 9px;gap:4px;font-size:11.5px}#achb svg{width:16px;height:16px}.top{padding-right:118px}.cvf .top{padding-right:150px}.dk+.dk{margin-left:6px}.dk+.dk::before{width:3px;right:calc(100% + 1.5px)}.ach-g{grid-template-columns:1fr}.ach-toast b{font-size:16.5px}.ach-toast .ach-ic{width:52px;height:52px}}
 @media(prefers-reduced-motion:reduce){.ach-toast,.ach-toast .ach-ic{animation:none}}
+
+/* ===== 家長參與與家庭支持（js/family.js） ===== */
+/* 家長支持度調查（沿用登記表 .rgm/.rgb 的外框） */
+.fsb{width:min(680px,100%)}
+.fsi{display:block;width:64px;height:64px;margin:0 auto 4px}.fsi svg,.pti svg{display:block;width:100%;height:100%}
+.fsq{margin:18px 0 0;padding:0;border:0;text-align:left}
+.fsq legend{display:flex;align-items:center;gap:10px;padding:0;margin-bottom:10px;font:800 15.5px/1.45 var(--sans);color:var(--ink9)}
+.fsq legend b{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--or);color:#fff;font:800 13px/1 var(--num)}
+.fsq legend em{font:500 12.5px var(--sans);font-style:normal;color:#8A7560}
+.fso{display:grid;gap:8px}.fso.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.fsc{display:flex;align-items:center;gap:10px;min-height:48px;padding:9px 14px;border:2px solid #EADBC3;border-radius:16px;background:#fff;cursor:pointer;transition:border-color .2s,background .2s}
+.fsc:hover{border-color:rgba(238,138,52,.55)}
+.fsc input{position:absolute;opacity:0;pointer-events:none}
+.fsc i{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2px solid #D9C7A8;font:800 12px/1 var(--num);font-style:normal;color:#8A7560;transition:.2s}
+.fsc.ck i{border-radius:8px}
+.fsc span{font:700 14px/1.45 var(--sans);color:var(--ink9)}
+.fsc:has(input:checked){border-color:var(--ink9);background:#FBEBD2}
+.fsc:has(input:checked) i{background:var(--ink9);border-color:var(--ink9);color:#FAF1E0}
+.fsc.ck:has(input:checked) i::before{content:"✓";color:#FAF1E0;font-size:14px}
+.fsc:has(input:focus-visible){outline:2px solid var(--or);outline-offset:2px}
+.fsn{margin:16px 0 0;padding:12px 16px;border-radius:16px;background:#F3E6CF;font:500 13px/1.7 var(--sans);color:#6b5846;text-align:left}
+@media(max-width:560px){.fso.two{grid-template-columns:1fr}.fsc{min-height:44px;padding:8px 12px}.fsi{width:52px;height:52px}}
+/* 30 天日曆：DAY 7／14／21／28 的刻度標記與左側按鈕 */
+.lf .tkb i:nth-child(7n)::after{content:"";position:absolute;bottom:-5px;left:50%;margin-left:-4px;width:8px;height:8px;background:#7FA7A0;clip-path:polygon(50% 0,100% 45%,100% 100%,0 100%,0 45%)}
+#ptp{display:flex;align-items:center;gap:7px;height:38px;margin-top:2px;padding:0 12px;border-radius:14px;background:var(--ink9);color:#FAF1E0;font:700 13px/1 var(--sans);cursor:pointer;pointer-events:auto;position:relative;transition:background .2s}
+#ptp:hover{background:#5a4334}#ptp svg{width:17px;height:17px;color:#F2C46D}#ptp span{flex:1;text-align:left}#ptp b{font:700 12.5px var(--num)}
+.ptd{position:absolute;top:-4px;right:-4px;width:12px;height:12px;border-radius:50%;background:#E58A7A;border:2px solid #FAF1E0;animation:ptD 1.4s ease-in-out infinite}
+@keyframes ptD{50%{transform:scale(1.25)}}
+@media(max-width:900px){#ptp{grid-column:1/-1;height:34px}}
+/* 任務視窗 */
+.ptm{position:fixed;inset:0;z-index:320;display:grid;place-items:center;padding:16px;background:rgba(36,26,20,.5);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);overflow:auto;animation:in .3s both}
+.ptb{position:relative;width:min(600px,100%);max-height:calc(100svh - 32px);overflow:auto;background:var(--card) var(--grain);border:2px solid transparent;border-radius:30px;padding:26px clamp(18px,4vw,36px) 20px;color:var(--ink9);animation:qzc .45s var(--ease9) both;transition:border-color .3s}
+.ptb.ok{border-color:#9FA34F}
+.pth{display:flex;align-items:center;gap:14px;padding-right:36px}
+.pti{flex:none;display:block;width:58px;height:58px}
+.ptg{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;background:#7FA7A0;color:#fff;font:800 12px/1 var(--sans);letter-spacing:.06em}.ptg svg{width:14px;height:14px}
+.pth h2{margin:7px 0 0;font:900 clamp(22px,3vw,28px)/1.25 var(--serif9)}
+.pts{margin:14px 0 0;font:500 14.5px/1.8 var(--sans);color:#4a382b}
+.ptq{margin-top:14px;padding:14px 18px;border-radius:20px;background:#fff}
+.ptq small{font:800 12px var(--sans);letter-spacing:.08em;color:#C2661E}
+.ptq ol{margin:8px 0 0;padding-left:22px;display:grid;gap:5px}.ptq li{font:600 14.5px/1.6 var(--sans)}.ptq li::marker{font-family:var(--num);font-weight:800;color:#C2661E}
+.ptn{margin:12px 0 0;padding:10px 14px;border-left:4px solid #EBA53B;border-radius:4px 14px 14px 4px;background:#FBEBD2;font:600 13.5px/1.7 var(--sans);color:#5a4334}
+.ptk{margin-top:14px}.ptk b{display:block;font:800 15px/1.5 var(--sans)}.ptk small{display:block;font:700 12px var(--sans);color:#3E8E63}
+.ptt{margin-top:12px;padding:14px 16px;border-radius:18px;background:#EEF2DC;animation:in .35s both}
+.ptt small{font:800 12px var(--sans);letter-spacing:.08em;color:#6E7A2E}.ptt p{margin:4px 0 0;font:500 14px/1.75 var(--sans);color:#3f4520}
+.ptf{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:16px}.ptf .tr2{margin:0}
+.ptm0{margin:12px 0 0;font:500 12px/1.6 var(--sans);color:#8A7560;text-align:center}
+.ptp{margin:10px 0 0;font:700 14px var(--sans)}.ptp b{color:var(--or);font-family:var(--num)}
+/* 任務清單（30 天視窗、必修課、評估表共用） */
+.ptl{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ptc button{display:flex;align-items:center;gap:12px;width:100%;height:100%;padding:12px 14px;border:2px dashed #D9C7A8;border-radius:18px;background:#fff;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s}
+.ptc button:hover{border-color:var(--or);transform:translateY(-2px)}
+.ptc .pti{width:46px;height:46px}
+.ptc small{display:block;font:800 11.5px/1.2 var(--sans);letter-spacing:.04em;color:#7FA7A0}
+.ptc b{display:block;margin:3px 0;font:800 15px/1.35 var(--sans);color:var(--ink9)}
+.ptc em{display:block;font:700 12px/1.3 var(--sans);font-style:normal;color:#C2661E}
+.ptc.ok button{border:2px solid #9FA34F;background:#F4F6E6}.ptc.ok em{color:#5E7A2E}
+.ptc.lock button{cursor:default;background:#F6EFE3}.ptc.lock button:hover{transform:none;border-color:#D9C7A8}.ptc.lock .pti{filter:grayscale(1);opacity:.45}.ptc.lock b,.ptc.lock em{color:#A8967F}
+.ptc button.shk{animation:ptS .35s}
+@keyframes ptS{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.ptlab{margin-top:22px;padding-top:18px;border-top:2px dashed rgba(59,42,32,.18)}
+.ptlab h3{display:flex;align-items:center;gap:8px}.ptlab h3 svg{width:22px;height:22px;color:#7FA7A0}
+/* 評估表：家庭支持度 */
+.fam-rp{margin:34px 0 0;padding:clamp(18px,3vw,28px);border-radius:28px;background:#fff}
+.fam-rp .ach-rh h3::before{content:"";display:inline-block;width:26px;height:22px;margin-right:8px;vertical-align:-2px;background:#D9822B;clip-path:polygon(50% 0,100% 45%,100% 100%,0 100%,0 45%)}
+.fmr{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+.fmr li{display:grid;grid-template-columns:150px auto 1fr;align-items:center;gap:6px 14px;padding:12px 16px;border-radius:16px;background:#FBF4E8}
+.fmr b{font:800 15px/1.4 var(--sans)}.fmr p{margin:0;font:500 13.5px/1.6 var(--sans);color:#6b5846}
+.fms{justify-self:start;padding:5px 12px;border-radius:99px;font:800 12.5px/1 var(--sans);white-space:nowrap}
+.fmr .good .fms{background:#9FA34F;color:#fff}.fmr .talk .fms{background:#7FA7A0;color:#fff}.fmr .todo .fms{background:#F2C46D;color:#5a3a20}.fmr .prep .fms{background:#EFC2B4;color:#7A3A2C}
+.fma{display:flex;gap:12px;align-items:flex-start;margin:14px 0 0;padding:14px 18px;border-radius:20px;background:#FBEBD2;font:600 14px/1.8 var(--sans);color:#4a382b}.fma svg{flex:none;width:24px;height:24px;margin-top:3px;color:#C2661E}
+@media(max-width:760px){.ptl{grid-template-columns:1fr}.fmr li{grid-template-columns:1fr auto}.fmr p{grid-column:1/-1}.ptb{border-radius:24px;padding:22px 16px 16px}.pti{width:48px;height:48px}.ptf .tr2{flex:1}}
