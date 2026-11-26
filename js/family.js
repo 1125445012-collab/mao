@@ -217,10 +217,12 @@ ${pn ? `<p class="ptn">${pn}</p>` : ''}
   };
   window.famReport = () => {
     const R = rows();
-    return `<section class="fam-rp"><div class="ach-rh"><div><small>FAMILY · SUPPORT · 家庭支持度</small><h3>養牠，是全家的事</h3></div><button class="tr2 ol" data-pt="list">親子任務 ${nDone()} / ${PT.length} →</button></div>
-<ul class="fmr">${R.map(r => `<li class="${STA[r.s][1]}"><b>${r.n}</b><span class="fms">${STA[r.s][0]}</span><p>${r.d}</p></li>`).join('')}</ul>
-<p class="fma">${IC.talk}<span>${advice(R)}</span></p>
-<p class="ach-s">家庭支持度只是幫你看看還有哪些地方需要和家人溝通，不會影響評估分數，也不代表你適不適合養狗。</p></section>`;
+    /* 評估表裡只放精簡版：五個項目＋狀態；個別提醒與說明收在「看提醒」裡 */
+    return `<section class="fam-rp mini"><div class="mrh"><small>FAMILY · SUPPORT · 家庭支持度</small><b>${nDone()}<em> / ${PT.length} 親子任務</em></b></div>
+<ul class="fmr">${R.map(r => `<li class="${STA[r.s][1]}" title="${r.d}"><b>${r.n}</b><span class="fms">${STA[r.s][0]}</span></li>`).join('')}</ul>
+<details class="fmd"><summary>看個別提醒</summary><p class="fma">${IC.talk}<span>${advice(R)}</span></p><ul class="fmx">${R.map(r => `<li><b>${r.n}</b>${r.d}</li>`).join('')}</ul></details>
+<p class="mrs">不會影響評估分數，也不代表你適不適合養狗</p>
+<button class="mrb" data-pt="list">親子任務 →</button></section>`;
   };
   window.famData = () => JSON.parse(JSON.stringify(F));
 })();

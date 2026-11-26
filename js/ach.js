@@ -117,9 +117,11 @@
   /* 成果報告（模擬評估表）裡的成就區塊 */
   window.achReport = () => {
     const mine = AC.filter(a => got[a.id]);
-    return `<section class="ach-rp"><div class="ach-rh"><div><small>ACHIEVEMENTS · 成就紀錄</small><h3>你獲得的成就　<b>${mine.length} / ${TOTAL}</b></h3></div><button class="tr2 ol" data-ach="open">看全部成就 →</button></div>
-${mine.length ? `<ul class="ach-g sm">${mine.map(a => tile(a, run.ids.includes(a.id))).join('')}</ul>` : '<p class="ach-s">這次還沒有解鎖成就。回到 30 天裡，試著多做幾次對牠長久最好的選擇吧！</p>'}
-<p class="ach-s">成就只是學習歷程的紀錄，不會決定你適不適合養狗。</p></section>`;
+    /* 評估表裡只放精簡版：小圖示一排（未解鎖為灰色），點「看全部」開成就收藏 */
+    return `<section class="ach-rp mini"><div class="mrh"><small>ACHIEVEMENTS · 成就紀錄</small><b>${mine.length}<em> / ${TOTAL}</em></b></div>
+<ul class="mic">${AC.map(a => { const g = got[a.id], hide = a.hid && !g; return `<li class="${g ? 'on' : ''}" title="${hide ? '隱藏成就' : a.n}${g ? '（已解鎖）' : ''}"><i class="ach-ic">${IC[a.id]}</i></li>` }).join('')}</ul>
+<p class="mrs">${mine.length ? `最新：${mine.slice().sort((x, y) => got[y.id].at - got[x.id].at).slice(0, 2).map(a => a.n).join('、')}` : '這次還沒有解鎖成就'}・只是學習紀錄，不代表適不適合養狗</p>
+<button class="mrb" data-ach="open">看全部成就 →</button></section>`;
   };
 
   /* 右上角的成就按鈕（放在聲音按鈕旁） */
