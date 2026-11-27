@@ -50,12 +50,12 @@ const TX={3:['第一個夜晚','陪伴','alone','半夜，{n}在窗邊的墊子�
 23:['窗邊的等待','陪伴','alone','你出門前，{n}坐在玄關看你穿鞋。回家時牠還在同一個位置。你不知道牠等了多久，只知道今天尾巴搖得特別用力。'],
 27:['傍晚的散步','散步','act','傍晚的散步變慢了，{n}停在每一根電線桿前面。你沒有催牠。第 27 天，你開始懂得，陪伴不是做了什麼，而是不趕時間。']};
 /* 柴犬、柯基用 SVG 插圖。q 題目、t 純文字頁（data.js 的 t）、d 其他、z 最後、low 心情或健康低於 40、quiz 評估五題、main／card／face 配對大卡、小卡、背面與取名
-   柴犬：shZ 趴睡、shP 趴著抬頭、shL 牽繩、shE 抓臉、shA 警覺、shS 低落　柯基：cgL 趴睡、cgS 坐著 */
+   柴犬：shZ 趴睡、shP 趴著抬頭、shL 牽繩、shE 抓臉、shA 警覺、shS 低落　柯基：cgL 趴睡、cgS 坐著、cgW 奔跑、cgA 警覺、cgB 想一想（燈泡）、cgH 開心 */
 const SVP={
 shiba:{q:{r_dinner:'shS',r_safezone:'shA',e_noeat:'shS',r_potty:'shA',r_alone:'shS',e_pee:'shP',r_family:'shP',r_activity:'shP',r_social:'shL',e_chew:'shP',r_groom:'shE',r_overtime:'shL',r_longplan:'shS',r_shop:'shP',e_itch:'shE',r_checkup:'shA',r_appetite:'shS',r_pace:'shL',e_abnormal:'shZ',r_budget:'shP',e_medical:'shS',r_final:'shP',e_outing:'shS',e_supply:'shA'},t:{0:'shZ',4:'shL',5:'shZ',6:'shZ',7:'shZ'},d:'shP',z:'shZ',low:'shS',quiz:['shP','shE','shP','shL','shA','shP'],main:'shP',card:'shP',face:'shE'},
-corgi:{q:{r_alone:'cgL',e_outing:'cgL',r_longplan:'cgL',e_abnormal:'cgL',r_appetite:'cgL',e_medical:'cgL'},t:{0:'cgL',5:'cgL',6:'cgL',7:'cgL'},d:'cgS',z:'cgL',low:'cgL',quiz:['cgS','cgS','cgS','cgS','cgS','cgS'],main:'cgS',card:'cgS',face:'cgS'}},
+corgi:{q:{r_alone:'cgL',e_outing:'cgL',r_longplan:'cgB',e_abnormal:'cgL',r_appetite:'cgL',e_medical:'cgL',r_safezone:'cgA',r_potty:'cgA',r_checkup:'cgA',e_supply:'cgA',r_activity:'cgW',r_social:'cgW',r_pace:'cgW',e_chew:'cgW',r_budget:'cgB',r_shop:'cgB',r_final:'cgB',r_family:'cgH',r_groom:'cgH'},t:{0:'cgL',4:'cgW',5:'cgL',6:'cgL',7:'cgL'},d:'cgS',z:'cgL',low:'cgL',quiz:['cgS','cgB','cgS','cgW','cgA','cgB'],main:'cgS',card:'cgS',face:'cgH'}},
 /* SVG 在「一生」的高度（%）、半身圖（底邊貼齊畫面下緣）、原圖朝左要翻成朝右的 */
-SVH={shZ:22,shP:38,shL:57,shE:54,shA:54,shS:54,cgL:25,cgS:48},SVB=['shL','shE','shA','shS'],SVF=['shZ','shA','shS','cgL','cgS'];
+SVH={shZ:22,shP:38,shL:57,shE:54,shA:54,shS:54,cgL:25,cgS:48,cgW:34,cgA:52,cgB:50,cgH:52},SVB=['shL','shE','shA','shS','cgA','cgB','cgH'],SVF=['shZ','shA','shS','cgL','cgS','cgW','cgA','cgB'];
 /* 其他六種狗：NPH 各姿態原圖高度（決定大小比例）、NPQ 題目→姿態、NPT 純文字頁→姿態 */
 const NPH={mutt:{sleep:182,play:414,sad:396,stand:459,sit:463},golden:{sleep:194,play:394,sad:389,stand:444,sit:458},maltese:{sleep:202,play:393,sad:377,stand:407,sit:395},poodle:{sleep:216,play:374,sad:372,stand:449,sit:454},pom:{sleep:267,play:398,sad:394,stand:436,sit:445},husky:{sleep:231,play:391,sad:347,stand:420,sit:422}},
 NPQ={r_dinner:'sad',r_safezone:'stand',e_noeat:'sad',r_potty:'stand',r_alone:'sad',e_pee:'sit',r_family:'sit',r_activity:'play',r_social:'sad',e_chew:'play',r_groom:'sit',r_overtime:'sit',r_longplan:'sad',r_shop:'stand',e_itch:'sad',r_checkup:'sit',r_appetite:'sad',r_pace:'sit',e_abnormal:'sleep',r_budget:'sit',e_medical:'sad',r_final:'sit',e_outing:'sad',e_supply:'sit'},
@@ -269,7 +269,7 @@ hud(1);const l=leaf(0);l.classList.add('drop');$('.cal').append(l);nar(1);sched(
 function hud(first){const si=sg(S.day),sn=S.ps||scene(S.day);$('#sn').textContent=AGE[Math.min(S.day,30)-1];$('#su').textContent=SH[si];
 $('#tk').innerHTML=Array.from({length:30},(_,i)=>`<i class="${i+1<S.day?'d':i+1==S.day?'c':''} ${FS.includes(i+1)?'s':''}">${i+1}</i>`).join('');$('#tkd').textContent=String(Math.min(S.day,30)).padStart(2,'0');
 $$('.sl').forEach(x=>x.classList.toggle('on',x.dataset.s==sn));
-{const dw=$('#dw'),im=dw&&$('img',dw);if(im){let np=npose(SEQ[S.pi]||{},sn);if(S.happy<40||S.health<40)np=npLow(np);const src=A[np];if(im.getAttribute('src')!==src){im.setAttribute('src',src)}dw.style.height=nph(np,46);dw.dataset.bust=SVB.includes(np)?1:''}}$('#scn').classList.toggle('sd',S.pop==1);{const cur=S.pi==SEQ.length-1?3:2;$$('#app .dk.st').forEach((x,i)=>{x.classList.toggle('on',i==cur);x.classList.toggle('done',i<cur);x.classList.toggle('locked',i>cur)})}
+{const dw=$('#dw'),im=dw&&$('img',dw);if(im){let np=npose(SEQ[S.pi]||{},sn);if(S.happy<40||S.health<40)np=npLow(np);const src=A[np];if(im.getAttribute('src')!==src){im.setAttribute('src',src)}dw.style.height=nph(np,46);dw.dataset.bust=SVB.includes(np)?1:'';dw.dataset.p=np}}$('#scn').classList.toggle('sd',S.pop==1);{const cur=S.pi==SEQ.length-1?3:2;$$('#app .dk.st').forEach((x,i)=>{x.classList.toggle('on',i==cur);x.classList.toggle('done',i<cur);x.classList.toggle('locked',i>cur)})}
 if(first)$('#hud').innerHTML=[['健康','#7C9A68'],['心情','#DE7228'],['羈絆','#E49BB9']].map(([k,c])=>`<div><small>${k}</small><em><i style="background:${c}"></i></em><b></b></div>`).join('')+'<div><small>累計花費</small><b class="mn"></b></div>';
 const c=$$('#hud>div'),vals=[S.health,S.happy,S.trust,S.spent],old=S.dv||vals;S.dv=vals.slice();
 vals.forEach((n,i)=>{const cell=c[i],b=$('b',cell),o=old[i],fm=v=>i<3?Math.round(v):'NT$ '+Math.round(v).toLocaleString();if(i<3)$('i',cell).style.width=n+'%';if(first||o===n){b.textContent=fm(n);return}
