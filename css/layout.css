@@ -228,6 +228,7 @@ body:has(.mm) #tskip{bottom:14px!important}
 .qz-dog.bust{bottom:-2px}.qz-dog.bust::before{display:none}.qz-dog.bust .qz-mp{bottom:4%}
 .mdg.sv,.ksc img.sv{object-position:50% 100%}.mdg.sv{height:66%}.mdg.sv:not(.np){height:62%}
 .lf .scn .dogw[data-bust="1"]{bottom:-14px}
+.lf .scn .dogw[data-p="cgH"] .dog{scale:-1 1}/* 開心柯基原圖朝右，「一生」裡翻成跟其他圖一樣朝左 */
 @media(max-width:900px){.lf .scn .dogw[data-bust="1"]{bottom:25%}}
 @media(max-width:760px){.qz-dog.sv img{top:auto;bottom:0;height:88%}.qz-dog.bust{margin-bottom:-8px}.qz-dog.bust .qz-mp{bottom:auto}}
 /* 首頁滿版：背景鋪滿整個視窗，物件維持比例（位置算法在 app.js 的 cover） */
