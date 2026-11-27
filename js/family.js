@@ -251,9 +251,8 @@ ${pn ? `<p class="ptn">${pn}</p>` : ''}
   };
   window.famStep = next => {
     if (document.querySelector('.fdm')) return;
-    const nm = typeof S != 'undefined' ? S.b : '';
     const m = document.createElement('div'); m.className = 'fdm'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'fdt');
-    m.innerHTML = `<div class="fdb"><div class="pth"><i class="pti">${IC.fam}</i><div><span class="ptg">${IC.talk}FAMILY · TEAM・家庭分工</span><h2 id="fdt">誰來照顧${nm ? '這隻' + nm : '牠'}？</h2></div></div><div class="fdw"></div>
+    m.innerHTML = `<div class="fdb"><div class="pth"><i class="pti">${IC.fam}</i><div><span class="ptg">${IC.talk}FAMILY · TEAM</span><h2 id="fdt">家庭分工</h2></div></div><div class="fdw"></div>
 <div class="ptf"><button class="tr2 ol" data-fd="back">← 回配對</button><button class="tr2" data-fd="go">完成分工，替牠取名字 →</button></div></div>`;
     const W = m.querySelector('.fdw'), draw = () => { W.innerHTML = famBody() };
     draw();
