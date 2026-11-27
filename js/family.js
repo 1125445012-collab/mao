@@ -34,7 +34,7 @@
       sc: '養狗不是一個人的事情，家人也需要一起討論照顧方式。請和家長討論，未來誰負責餵食、散步、清潔及就醫，讓每個人都清楚自己的責任。',
       qs: ['平日誰負責餵食？', '誰負責散步與陪伴？', '狗狗生病時，由誰陪同就醫？', '全家外出時，由誰照顧狗狗？'],
       ok: '我已經和家長討論過照顧分工',
-      tip: '把討論好的分工寫下來，貼在冰箱上。每個人都知道自己負責什麼，狗狗才不會今天吃兩餐、明天沒人餵。必修課的「家庭分工」也可以排排看。' },
+      tip: '把討論好的分工寫下來，貼在冰箱上。每個人都知道自己負責什麼，狗狗才不會今天吃兩餐、明天沒人餵。配對後排好的「家庭分工」可以拿出來一起對照。' },
     { d: 14, id: 'cost', tag: '飼養費用', t: '養狗需要多少錢？',
       sc: '飼料吃完了、要打疫苗、毛長了要美容……每一樣都要花錢。請和家長一起看看養狗的花費，討論家裡每個月可以準備多少。',
       qs: ['飼料、用品、美容、醫療，每個月大約要花多少？', '我們家每個月可以為牠準備多少預算？', '如果狗狗突然要看病或開刀，費用從哪裡來？'],
@@ -224,5 +224,74 @@ ${pn ? `<p class="ptn">${pn}</p>` : ''}
 <p class="mrs">不會影響評估分數，也不代表你適不適合養狗</p>
 <button class="mrb" data-pt="list">親子任務 →</button></section>`;
   };
+  /* ---------- 4. 家庭分工（配對按「就是牠了！」之後、取名與一生之前） ----------
+     原本在必修課第 06 堂，移到這裡。每格最多 2 張卡；「我」不限次數，其他家人最多 2 項。
+     分工內容在這次瀏覽中保留（回配對再進來還在），按「完成分工」時把已分配的任務數交給成就系統。 */
+  const FTa = [['feed', '每日餵食'], ['water', '更換飲水'], ['walk', '每天散步'], ['play', '陪伴與遊戲'], ['groom', '梳毛與清潔'], ['env', '環境整理'], ['vet', '安排看醫生']], FCc = ['#EE8A34', '#6FA0C0', '#8FB59A', '#C99A3B', '#B58BC0', '#D9564A'];
+  const FD = { mem: [{ id: 'm0', n: '我' }, { id: 'm1', n: '爸爸' }, { id: 'm2', n: '媽媽' }, { id: 'm3', n: '其他家人' }], nx: 4, as: {}, sel: null, warn: null, cp: 0 };
+  const FSL = 2, famMax = id => id == 'm0' ? Infinity : 2, famAt = t => FD.as[t] || [], famCnt = id => FTa.filter(t => famAt(t[0]).includes(id)).length,
+    famN = id => (FD.mem.find(m => m.id == id) || { n: '?' }).n, famC = id => FCc[Math.max(0, FD.mem.findIndex(m => m.id == id)) % FCc.length],
+    famDone = () => FTa.filter(t => famAt(t[0]).length).length;
+  const famPut = (t, id) => {
+    const a = famAt(t);
+    if (a.includes(id)) { FD.warn = famN(id) + ' 已經在這一格了。'; return false }
+    if (a.length >= FSL) { FD.warn = '這一格已經有 2 張卡片了，先取消一張再放。'; return false }
+    if (famCnt(id) >= famMax(id)) { FD.warn = famN(id) + ' 已經負責 2 項了，換一位家人，或先取消一項。'; return false }
+    FD.as[t] = [...a, id]; FD.warn = null; return true;
+  };
+  const famBody = () => {
+    const n = famDone(), cnt = {}; FTa.forEach(t => famAt(t[0]).forEach(a => { cnt[a] = (cnt[a] || 0) + 1 }));
+    const mx = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
+    const note = n == 0 ? '把家人卡片拖進任務格子裡，每格最多放 2 張；「我」不限次數，其他家人最多負責 2 項。也可以先點卡片，再點格子。' : n < 7 ? `還有 ${7 - n} 項沒有人負責。` : (mx && mx[1] >= 4 ? `${famN(mx[0])}負責了 ${mx[1]} 項——一個人撐太久會累，想想誰能分擔。` : '七項都有人負責，分配得算平均。記得和家人一起確認。');
+    return `<div class="ftop"><p class="lx">牠不是一個人的狗。迎接牠之前，先建立家庭照護團隊，把照顧工作分給每位家人。</p><span class="sc3">已分配 ${n} / 7</span></div>
+<div class="fadd"><input id="fadd" maxlength="4" placeholder="新增家庭成員，例如：姊姊"><button class="tr2 sm" data-fa="add">新增</button></div>
+<div class="ftray">${FD.mem.map(m => `<div class="fcd ${FD.sel == m.id ? 'sel' : ''} ${famCnt(m.id) >= famMax(m.id) ? 'full' : ''}" data-mid="${m.id}" style="--c:${famC(m.id)}"><i></i><b>${m.n}</b><em class="fct">${m.id == 'm0' ? famCnt(m.id) + ' 項' : famCnt(m.id) + '/2'}</em>${m.id == 'm0' ? '' : `<button class="fx" data-fa="rm" data-id="${m.id}" aria-label="移除${m.n}">×</button>`}</div>`).join('')}</div>
+<div class="fgrid">${FTa.map((t, i) => { const a = famAt(t[0]); return `<div class="fsl ${a.length ? 'ok' : ''}" data-t="${t[0]}"><small>0${i + 1}</small><b>${t[1]}</b><div class="fdp">${a.map(x => `<span class="fas" style="--c:${famC(x)}">${famN(x)}<button data-fa="clr" data-t="${t[0]}" data-id="${x}" aria-label="取消${famN(x)}">×</button></span>`).join('')}${a.length ? a.length < FSL ? '<em>還能放 1 張</em>' : '' : '<em>拖到這裡</em>'}</div></div>` }).join('')}</div>
+<p class="fnote ${FD.warn ? 'w' : ''}">${FD.warn || note}</p><div class="fbt"><button class="lk" data-fa="reset">重新分配</button><button class="lk" data-fa="copy">${FD.cp ? '已複製 ✓' : '複製分工表'}</button></div>`;
+  };
+  window.famStep = next => {
+    if (document.querySelector('.fdm')) return;
+    const nm = typeof S != 'undefined' ? S.b : '';
+    const m = document.createElement('div'); m.className = 'fdm'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'fdt');
+    m.innerHTML = `<div class="fdb"><div class="pth"><i class="pti">${IC.fam}</i><div><span class="ptg">${IC.talk}FAMILY · TEAM・家庭分工</span><h2 id="fdt">誰來照顧${nm ? '這隻' + nm : '牠'}？</h2></div></div><div class="fdw"></div>
+<div class="ptf"><button class="tr2 ol" data-fd="back">← 回配對</button><button class="tr2" data-fd="go">完成分工，替牠取名字 →</button></div></div>`;
+    const W = m.querySelector('.fdw'), draw = () => { W.innerHTML = famBody() };
+    draw();
+    m.addEventListener('click', e => {
+      const fd = e.target.closest('[data-fd]');
+      if (fd) { if (fd.dataset.fd == 'go') { window.achLab && achLab('fam', famDone()); m.remove(); next && next() } else m.remove(); return }
+      const sl = e.target.closest('.fsl'); if (sl && FD.sel && !e.target.closest('button')) { famPut(sl.dataset.t, FD.sel); FD.sel = null; draw(); return }
+      const fb = e.target.closest('[data-fa]'); if (!fb) return; const o = fb.dataset.fa;
+      if (o == 'add') { const v = (m.querySelector('#fadd').value || '').trim().slice(0, 4); if (v && FD.mem.length < 6) FD.mem.push({ id: 'm' + FD.nx++, n: v }) }
+      else if (o == 'rm') { FD.mem = FD.mem.filter(x => x.id != fb.dataset.id); for (const k in FD.as) FD.as[k] = FD.as[k].filter(x => x != fb.dataset.id); if (FD.sel == fb.dataset.id) FD.sel = null; FD.warn = null }
+      else if (o == 'clr') { const k = fb.dataset.t; FD.as[k] = famAt(k).filter(x => x != fb.dataset.id); FD.warn = null }
+      else if (o == 'reset') { FD.as = {}; FD.sel = null; FD.warn = null }
+      else if (o == 'copy') { const t = '我的家庭照護分工表\n' + FTa.map(x => x[1] + '：' + (famAt(x[0]).map(famN).join('、') || '（未安排）')).join('\n'); try { navigator.clipboard.writeText(t) } catch (_) {} FD.cp = 1 }
+      draw(); if (o == 'add') { const i = m.querySelector('#fadd'); i && i.focus() }
+    });
+    m.addEventListener('keydown', e => {
+      if (e.key == 'Enter' && e.target.id == 'fadd') { const v = e.target.value.trim().slice(0, 4); if (v && FD.mem.length < 6) FD.mem.push({ id: 'm' + FD.nx++, n: v }); draw(); const i = m.querySelector('#fadd'); i && i.focus() }
+      else if (e.key == 'Escape') m.remove();
+    });
+    /* 拖曳家人卡片到任務格；沒有拖動就當成「點選」 */
+    m.addEventListener('pointerdown', e => {
+      const c = e.target.closest('.fcd'); if (!c || e.target.closest('button')) return;
+      const sx = e.clientX, sy = e.clientY, id = c.dataset.mid; let gh = null;
+      const mv = ev => {
+        if (!gh && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 6) { gh = c.cloneNode(true); gh.className = 'fcd fgh'; gh.style.cssText = c.style.cssText; document.body.append(gh) }
+        if (gh) { gh.style.left = ev.clientX + 'px'; gh.style.top = ev.clientY + 'px'; m.querySelectorAll('.fsl.ov').forEach(x => x.classList.remove('ov')); const el = document.elementFromPoint(ev.clientX, ev.clientY), s2 = el && el.closest('.fsl'); if (s2 && m.contains(s2)) s2.classList.add('ov') }
+      };
+      const up = ev => {
+        removeEventListener('pointermove', mv); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+        if (gh) { const el = document.elementFromPoint(ev.clientX, ev.clientY), s2 = el && el.closest('.fsl'); gh.remove(); if (s2 && m.contains(s2) && ev.type == 'pointerup') { famPut(s2.dataset.t, id); FD.sel = null } }
+        else FD.sel = FD.sel == id ? null : id;
+        draw();
+      };
+      addEventListener('pointermove', mv); addEventListener('pointerup', up); addEventListener('pointercancel', up); e.preventDefault();
+    });
+    document.body.append(m);
+    const r = m.querySelector('.fdb').getBoundingClientRect(); if (typeof burst == 'function') burst(r.left + r.width / 2, r.top + 60);
+  };
+
   window.famData = () => JSON.parse(JSON.stringify(F));
 })();

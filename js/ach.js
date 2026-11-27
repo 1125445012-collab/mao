@@ -51,7 +51,7 @@
       test: () => okCount(['r_activity', 'r_pace', 'r_social', 'r_overtime']) >= 3, why: () => '你替牠安排散步和陪伴，也注意到牠不同時期的活動需求。' },
     { id: 'train', cat: '行為訓練', n: '耐心訓練師', k: '累積', how: '在如廁、居家規矩與破壞行為的事件中，3 次用正確、溫和的方式引導。',
       test: () => okCount(['r_safezone', 'r_potty', 'e_pee', 'e_chew']) >= 3, why: () => '牠犯錯時你沒有責罵，而是耐心引導，讓牠知道怎麼做才對。' },
-    { id: 'family', cat: '家庭責任', n: '家庭責任小隊長', k: '累積', how: '安排家庭照顧分工（開家庭會議，或在必修課把 7 項任務都分配好），並考慮飼養費用或突發支出。',
+    { id: 'family', cat: '家庭責任', n: '家庭責任小隊長', k: '累積', how: '安排家庭照顧分工（開家庭會議，或在配對後的「家庭分工」把 7 項任務都分配好），並考慮飼養費用或突發支出。',
       test: () => (okOf('r_family') || run.fam >= 7) && (okOf('r_budget') || okOf('e_medical') || okOf('r_longplan')), why: () => '你讓家人一起分擔照顧，也替牠的花費和突發狀況預先做好準備。' },
     { id: 'life', cat: '長期責任', n: '一生相伴守護者', k: '完成', how: '陪牠走完 30 天，並且在幼年、青年、中年、老年四個生命階段，每個階段都至少做出 1 次理想的選擇。',
       test: () => run.done && [0, 1, 2, 3].every(s => H().some(h => ideal(h) && sg(h.d) == s)), why: () => '從幼犬到老年，你在每個生命階段都用心照顧牠，也陪牠面對老去。' },
@@ -86,9 +86,9 @@
   const check = () => { AC.forEach(a => { if (!got[a.id]) { let ok = false; try { ok = a.test() } catch (e) {} if (ok) unlock(a) } }) };
 
   /* 給 app.js 呼叫 */
-  window.achCheck = w => { if (w == 'end') run.done = true; if (w == 'start') { run.start = Date.now(); run.ids = []; run.done = false; run.fam = 0 } check() };
+  window.achCheck = w => { if (w == 'end') run.done = true; if (w == 'start') { run.start = Date.now(); run.ids = []; run.done = false } check() };   // 家庭分工在一生之前完成，開始 30 天時不清掉
   window.achLab = (type, v, R) => {
-    if (type == 'tab' && R && R.fm) { run.fam = Object.values(R.fm.as || {}).filter(x => x && x.length).length }
+    if (type == 'fam') run.fam = +v || 0;   // 配對後的「家庭分工」：已分配的任務數
     if (type == 'bq') run.bq.push(!!v);
     check();
   };

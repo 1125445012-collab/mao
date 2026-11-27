@@ -13,6 +13,7 @@ const lf=$('.leaf:not(.tear)');if(!lf)return;const ops=$('.ops',lf);if(ops&&!ops
 bt.addEventListener('click',()=>{
 const fs=$('.fsv');if(fs){if(!$('[name=q1]:checked',fs))ck(rnd($$('[name=q1]',fs)));if(!$('[name=q2]:checked',fs))ck(rnd($$('[name=q2]',fs)));ck($('.rgo',fs));return}
 const pm=$('.ptm');if(pm){ck($('[data-pt=x]',pm));return}
+const fdm=$('.fdm');if(fdm){ck($('[data-fd=go]',fdm));return}
 const rg=$('.rgm');if(rg){const v=(id,x)=>{const el=$('#'+id,rg);if(!el.value)el.value=x};v('rgn','測試');v('rga','10');$('#rgok',rg).checked=true;$('.rgo',rg).click();return}
 const mm=$('.mm');
 if(mm){const s=+mm.dataset.st;if(s==1)ck($('[data-m=dn]',mm));else if(s==2)ck($('[data-m=l3]',mm));else say2('已經是最後一頁了');return}
