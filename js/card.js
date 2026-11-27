@@ -38,7 +38,8 @@ async function draw(o){
   const txt='毛²評估所我的陪伴紀錄狗檔案天數模擬花費健康心情羈絆飼主理想照顧選擇最適合你的風格推薦犬種契度六大面向表現們念這，一起經歷了從第次迎接、日常到過不同生活事件每段都是值得珍藏回憶。想對說話成為位好理解與準備開始累計（）！…'+AXES.join('')+TYPES.join('')+bn+rn+o.name+evT;
   const fl=[['900 20px',F,txt],['700 20px',F,txt],['500 20px',F,txt],['400 20px',HW,o.msg]].map(([w,f,t])=>document.fonts.load(`${w} ${f.split(',')[0]}`,t));
   await Promise.race([Promise.all(fl).catch(()=>{}),new Promise(r=>setTimeout(r,5000))]);
-  const [hero,polo,mem,scI,homeI]=await Promise.all([load(dogSrc(bk,'sit')),load(dogSrc(bk,'happy')),load(dogSrc(bk,POSE[scn])),load(A[scn]),load(A.home)]);
+  /* 標準字只在網頁伺服器上用（file:// 沒有內嵌版，畫進去會讓圖片無法下載），讀不到就改用文字 */
+  const [hero,run,mem,logo]=await Promise.all([load(dogSrc(bk,'sit')),load(dogSrc(bk,'jump')),load(dogSrc(bk,'happy')),location.protocol=='file:'||typeof A=='undefined'?null:load(A.logo)]);
 
   const cv=document.createElement('canvas');cv.width=W*K;cv.height=H*K;const c=cv.getContext('2d');c.scale(K,K);
   /* 小工具 */
@@ -50,92 +51,97 @@ async function draw(o){
   const tw=(t,s,w,f)=>{font(s,w,f);return c.measureText(t).width};
   const fitT=(t,x,y,mw,s,col,w,al,f)=>{while(tw(t,s,w,f)>mw&&s>9)s-=.5;T(t,x,y,s,col,w,al,f);return s};
   const lines=(t,s,w,f,mw)=>{font(s,w,f);const L=[];let cur='';for(const ch of t){if(c.measureText(cur+ch).width>mw&&!'，。、！？」…♡'.includes(ch)){L.push(cur);cur=ch}else cur+=ch}L.push(cur);return L};
-  const paw=(x,y,s,col)=>{c.fillStyle=col;[[-.82,-.2,.25,.34,-.4],[-.32,-.72,.26,.36,-.12],[.32,-.72,.26,.36,.12],[.82,-.2,.25,.34,.4]].forEach(([dx,dy,a,b,ro])=>{c.beginPath();c.ellipse(x+dx*s,y+dy*s,a*s,b*s,ro,0,7);c.fill()});
-    c.beginPath();c.moveTo(x,y-.2*s);c.bezierCurveTo(x+.5*s,y-.2*s,x+.85*s,y+.5*s,x+.6*s,y+.78*s);c.bezierCurveTo(x+.4*s,y+1*s,x+.2*s,y+.72*s,x,y+.74*s);c.bezierCurveTo(x-.2*s,y+.72*s,x-.4*s,y+1*s,x-.6*s,y+.78*s);c.bezierCurveTo(x-.85*s,y+.5*s,x-.5*s,y-.2*s,x,y-.2*s);c.fill()};
-  const heart=(x,y,s,col,line)=>{c.beginPath();c.moveTo(x,y+s*.9);c.bezierCurveTo(x-s*1.5,y-s*.1,x-s*.85,y-s*1.1,x,y-s*.35);c.bezierCurveTo(x+s*.85,y-s*1.1,x+s*1.5,y-s*.1,x,y+s*.9);if(line){c.strokeStyle=col;c.lineWidth=line;c.lineJoin='round';c.stroke()}else{c.fillStyle=col;c.fill()}};
-  const contain=(i,x,y,w,h)=>{if(!i)return;const s=Math.min(w/i.naturalWidth,h/i.naturalHeight),dw=i.naturalWidth*s,dh=i.naturalHeight*s;c.drawImage(i,x+(w-dw)/2,y+h-dh,dw,dh)};
-  const coverI=(i,x,y,w,h,py)=>{if(!i)return;const s=Math.max(w/i.naturalWidth,h/i.naturalHeight),dw=i.naturalWidth*s,dh=i.naturalHeight*s;c.drawImage(i,x+(w-dw)/2,y+(h-dh)*(py==null?.5:py),dw,dh)};
-  const ell=(x,y,a,b,col)=>{c.fillStyle=col;c.beginPath();c.ellipse(x,y,a,b,0,0,7);c.fill()};
-  const strokes=(L,col,w)=>{c.strokeStyle=col;c.lineWidth=w;c.lineCap='round';L.forEach(([a,b,d,e])=>{c.beginPath();c.moveTo(a,b);c.lineTo(d,e);c.stroke()})};
-  const tape=(x,y,w,h,ro)=>{c.save();c.translate(x,y);c.rotate(ro);c.fillStyle='rgba(236,200,160,.82)';c.fillRect(-w/2,-h/2,w,h);c.restore()};
+  const heart=(x,y,s,col)=>{c.beginPath();c.moveTo(x,y+s*.9);c.bezierCurveTo(x-s*1.5,y-s*.1,x-s*.85,y-s*1.1,x,y-s*.35);c.bezierCurveTo(x+s*.85,y-s*1.1,x+s*1.5,y-s*.1,x,y+s*.9);c.fillStyle=col;c.fill()};
+  const contain=(i,x,y,w,h,flip)=>{if(!i)return;const s=Math.min(w/i.naturalWidth,h/i.naturalHeight),dw=i.naturalWidth*s,dh=i.naturalHeight*s;c.save();if(flip){c.translate(x+w/2,0);c.scale(-1,1);c.translate(-(x+w/2),0)}c.drawImage(i,x+(w-dw)/2,y+h-dh,dw,dh);c.restore()};
+  const poly=(pts,col)=>{c.fillStyle=col;c.beginPath();pts.forEach((p,i)=>i?c.lineTo(...p):c.moveTo(...p));c.closePath();c.fill()};
+  const dot=(x,y,r,col)=>{c.fillStyle=col;c.beginPath();c.arc(x,y,r,0,7);c.fill()};
+  /* 標準字：灰黑原色疊一層咖啡色，跟版面同色系 */
+  const mark=(x,y,h,al)=>{
+    if(!logo){T('毛²評估所',x,y+h/2,h*.72,C.ink,900,al);return}
+    const w=h*logo.naturalWidth/logo.naturalHeight,o2=document.createElement('canvas');o2.width=Math.ceil(w*K);o2.height=Math.ceil(h*K);
+    const g2=o2.getContext('2d');g2.drawImage(logo,0,0,o2.width,o2.height);g2.globalCompositeOperation='source-atop';g2.fillStyle='rgba(91,56,38,.6)';g2.fillRect(0,0,o2.width,o2.height);
+    c.drawImage(o2,al=='center'?x-w/2:x,y,w,h)};
+  /* 葉子：兩片色塊拼成一片，跟狗狗插畫的切面風格一致 */
+  const leaf=(x,y,len,wd,ro)=>{c.save();c.translate(x,y);c.rotate(ro);
+    c.fillStyle='#9C9C6B';c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(-wd,-len*.45,0,-len);c.lineTo(0,0);c.fill();
+    c.fillStyle='#868858';c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(wd,-len*.5,0,-len);c.lineTo(0,0);c.fill();c.restore()};
+  const sprig=(x,y,f)=>{c.save();c.translate(x,y);c.scale(f,1);leaf(0,0,34,10,-.08);leaf(-2,-4,26,8,-.9);leaf(2,-10,24,8,.75);leaf(-1,-16,20,7,-.45);c.restore()};
 
   /* 底紙＋圓角卡片 */
   c.fillStyle='#FCF3E9';c.fillRect(0,0,W,H);c.translate(MX,MY);
-  c.save();c.shadowColor='rgba(120,75,40,.3)';c.shadowBlur=16;c.shadowOffsetY=5;box(0,0,CW,CH,30,'#FDF3E7');c.restore();
-  c.save();rr(0,0,CW,CH,30);c.clip();
-  let g=c.createLinearGradient(0,0,0,CH);g.addColorStop(0,'#FEF5EA');g.addColorStop(.28,'#FCEBD8');g.addColorStop(.5,'#FAE3C9');g.addColorStop(1,'#F7DABA');c.fillStyle=g;c.fillRect(0,0,CW,CH);
-  /* 標頭背景 */
-  ell(62,210,110,112,C.sage);ell(236,246,72,78,C.sage);
-  [[-6,252,34,30],[26,276,26,24],[6,292,44,34]].forEach(a=>ell(...a,'#B7B487'));
-  ell(600,300,130,58,'#DDB48B');ell(470,338,190,44,'#EACBA6');ell(540,300,54,14,'#B9AF7C');ell(120,344,240,52,'#EDD0AC');
-  strokes([[32,160,42,174],[46,142,58,166],[66,140,62,150]],'#8E8F5C',3);
+  c.save();c.shadowColor='rgba(120,75,40,.18)';c.shadowBlur=10;c.shadowOffsetY=3;box(0,0,CW,CH,28,'#F5E2C9');c.restore();
+  c.save();rr(0,0,CW,CH,28);c.clip();
+  c.fillStyle='#F5E2C9';c.fillRect(0,0,CW,CH);
+
+  /* 標頭：平塗的折角山丘 */
+  c.fillStyle='#E9C9A4';c.fillRect(0,0,CW,336);
+  poly([[0,214],[70,160],[128,182],[214,118],[300,176],[352,336],[0,336]],'#F0DDB8');
+  poly([[214,118],[300,176],[262,190],[214,150]],'#E8D2AA');
+  poly([[340,336],[402,256],[452,268],[530,206],[590,236],[590,336]],'#DDB28A');
+  poly([[530,206],[590,236],[590,262],[548,236]],'#D3A47B');
+  poly([[0,300],[140,278],[290,296],[440,280],[590,302],[590,336],[0,336]],'#E2BD96');
+  poly([[0,316],[0,240],[16,226],[34,238],[40,262],[60,270],[70,316]],'#919267');
+  poly([[16,226],[34,238],[40,262],[20,270]],'#7F8257');
+  poly([[528,336],[546,304],[566,296],[590,306],[590,336]],'#A0A071');
+
   /* 標頭文字 */
-  paw(50,42,20,C.br);T('毛²評估所',82,34,20,C.ink,900);T('PET READINESS LAB',82,54,10.5,C.br,700,'left',F,.4);
-  T('我的陪伴紀錄',302,92,42,C.ink,900,'center',F,1);
-  { /* 微微起伏的英文字 */
-    const s='MY JOURNEY WITH MY DOG';font(15,700);let x=316-s.split('').reduce((n,ch)=>n+c.measureText(ch).width+1.4,0)/2;
-    c.fillStyle=C.tan;c.textAlign='left';c.textBaseline='middle';for(const ch of s){const w=c.measureText(ch).width,u=(x-316)/112;c.save();c.translate(x+w/2,127+u*3-1.5*Math.cos(u*2.6));c.rotate(.03);c.fillText(ch,-w/2,0);c.restore();x+=w+1.4}}
-  strokes([[452,104,463,86],[464,114,479,97],[470,125,485,121]],C.tan,3.4);heart(557,140,10,C.tan,3);
-  /* 主角 */
-  c.save();c.beginPath();c.rect(0,120,290,196);c.clip();
-  if(hero){const s=Math.min(212/hero.naturalWidth,292/hero.naturalHeight),dw=hero.naturalWidth*s,dh=hero.naturalHeight*s;c.translate(134,0);c.scale(-1,1);c.shadowColor='rgba(110,70,35,.22)';c.shadowBlur=14;c.shadowOffsetY=4;c.drawImage(hero,-dw/2,dh>250?132:324-dh*1.0+Math.max(0,dh-188),dw,dh)}
-  c.restore();
-  heart(256,250,8,C.tan);
+  mark(26,20,42,'left');
+  T('我的陪伴紀錄',CW/2,92,42,C.ink,900,'center',F,2);
+  T('MY JOURNEY WITH MY DOG',CW/2,130,14.5,C.ink2,700,'center',F,1.2);
+
+  /* 主角：坐著的大狗，下半身被 01 面板蓋住 */
+  contain(hero,4,148,262,290,true);
+
   /* 名牌 */
-  c.save();rr(294,163,262,136,20);c.fillStyle='rgba(255,249,240,.95)';c.fill();c.setLineDash([7,5]);c.strokeStyle='#D9AE80';c.lineWidth=1.8;c.stroke();c.restore();
-  fitT(o.name,425,196,230,34,C.ink,900,'center');fitT(`${bn}｜${ben}`,425,229,236,15,C.ink2,500,'center');
-  c.save();c.translate(425,267);c.rotate(-.012);box(-118,-20,236,40,16,'#7B8650');paw(-99,0,9,'#FFF8EC');T('30 DAYS JOURNEY COMPLETED',13,1,12,'#FFF8EC',700,'center');c.restore();
+  box(306,160,256,140,24,'#FCEEDB');
+  fitT(o.name,434,200,224,34,C.ink,900,'center');
+  fitT(`${bn}｜${ben}`,434,236,228,15,C.ink2,500,'center');
+  box(322,254,224,34,17,'#7E8150');dot(342,271,5,'#FFF8EC');T('30 DAYS JOURNEY COMPLETED',446,272,11.5,'#FFF8EC',700,'center',F,.3);
 
   /* 面板 */
-  const panel=(y,h,no,tt,en)=>{c.save();c.shadowColor='rgba(140,85,40,.22)';c.shadowBlur=14;c.shadowOffsetY=4;box(12,y,566,h,26,C.cream);c.restore();box(12,y,566,h,26,null,'rgba(214,168,122,.4)',1);
-    c.fillStyle=C.br;c.beginPath();c.arc(56,y+30,20,0,7);c.fill();T(no,56,y+31,18,'#FFF6E8',700,'center');
-    T(tt,87,y+30,25,C.ink,900);const w=tw(tt,25,900);T(en,87+w+14,y+32,13.5,C.br,700,'left',F,.4);paw(544,y+30,12,'#DDB48B')};
+  const panel=(y,h,no,tt,en)=>{
+    box(12,y+3,566,h,24,'rgba(196,146,98,.18)');box(12,y,566,h,24,'#FFFAF3');
+    dot(54,y+32,19,C.br);T(no,54,y+33,17,'#FFF6E8',700,'center');
+    T(tt,84,y+32,24,C.ink,900);T(en,84+tw(tt,24,900)+12,y+34,13,C.ink2,600,'left',F,.6);dot(548,y+34,6,'#DDB089')};
 
   /* 01 狗狗檔案 */
   panel(324,202,'01','我的狗狗檔案','PROFILE');
-  c.save();c.translate(92,450);c.rotate(-.09);c.save();c.shadowColor='rgba(80,45,20,.26)';c.shadowBlur=10;c.shadowOffsetY=4;c.fillStyle='#FFFDF8';c.fillRect(-59,-62,118,126);c.restore();
-  c.save();c.beginPath();c.rect(-52,-55,104,92);c.clip();c.fillStyle='#D9C3A8';c.fillRect(-52,-55,104,92);if(homeI){c.globalAlpha=.75;coverI(homeI,-52,-55,104,92,.7);c.globalAlpha=1}contain(polo,-48,-46,96,82);c.restore();
-  heart(42,51,5.5,C.tan);c.restore();tape(86,384,42,14,-.14);
-  box(161,384,88,122,18,C.peach);T('陪伴天數',205,409,14,C.ink,700,'center');T('30',205,453,44,C.ink,900,'center');T('DAYS',205,484,13.5,C.ink2,500,'center');
-  box(257,384,106,122,18,C.peach);T('模擬花費',310,409,14,C.ink,700,'center');
-  {const n=o.spent.toLocaleString();let a=13.5,b=21;while(tw('NT$',a,700)+4+tw(n,b,900)>96&&b>11){b-=.5;a-=.25}const x=310-(tw('NT$',a,700)+4+tw(n,b,900))/2;T('NT$',x,453,a,C.ink,700);T(n,x+tw('NT$',a,700)+4,451,b,C.ink,900)}
-  T('（30 天累計）',310,484,10.5,C.ink2,500,'center');
-  box(371,384,191,122,18,C.peach);
-  [['健康',o.h],['心情',o.m],['羈絆',o.t]].forEach(([l,v],i)=>{const y=409+i*37;T(l,385,y,14,C.ink,700);box(422,y-7,80,14,7,'rgba(160,120,75,.16)');box(422,y-7,Math.max(14,80*Math.min(100,v)/100),14,7,C.ol);T(v+'/100',553,y,11.5,C.ink,500,'right')});
+  contain(run,22,384,170,122);
+  T('陪伴天數',238,398,14,C.ink,700,'center');T('30',238,442,46,C.ink,900,'center');T('DAYS',238,482,13.5,C.ink2,600,'center');
+  T('模擬花費',348,398,14,C.ink,700,'center');
+  {const n=o.spent.toLocaleString();let a=14,b=24;while(tw('NT$',a,700)+4+tw(n,b,800)>104&&b>11){b-=.5;a-=.25}const x=348-(tw('NT$',a,700)+4+tw(n,b,800))/2;T('NT$',x,444,a,C.ink,700);T(n,x+tw('NT$',a,700)+4,442,b,C.ink,800)}
+  T('（30 天累計）',348,482,11,C.ink2,500,'center');
+  [['健康',o.h],['心情',o.m],['羈絆',o.t]].forEach(([l,v],i)=>{const y=402+i*39;T(l,414,y,14,C.ink,700);box(450,y-7,62,14,7,'#EFE3D2');box(450,y-7,Math.max(14,62*Math.min(100,v)/100),14,7,C.ol);T(v+'/100',566,y,11.5,C.ink,500,'right')});
 
   /* 02 飼主評估 */
   panel(538,210,'02','我的飼主評估','ASSESSMENT');
-  c.fillStyle=C.peach;c.beginPath();c.moveTo(72,596);c.lineTo(184,596);c.bezierCurveTo(214,598,224,628,221,664);c.bezierCurveTo(224,704,212,732,182,732);c.lineTo(66,732);c.bezierCurveTo(36,732,24,708,27,668);c.bezierCurveTo(24,626,42,597,72,596);c.fill();
-  T('理想照顧選擇',147,622,14,C.ink,700,'center');
-  c.fillStyle='#8F5E3D';c.fillRect(76,663,8,16);c.beginPath();c.moveTo(39,686);c.lineTo(63,661);c.lineTo(87,686);c.lineTo(83,690);c.lineTo(63,671);c.lineTo(43,690);c.closePath();c.fill();c.fillStyle='#C08A5B';c.beginPath();c.moveTo(46,685);c.lineTo(63,669);c.lineTo(80,685);c.lineTo(80,704);c.lineTo(46,704);c.closePath();c.fill();c.strokeStyle='#8F5E3D';c.lineWidth=2.4;c.lineJoin='round';c.stroke();heart(63,688,6,'#FFF3E0');c.fillStyle='#8F5E3D';c.fillRect(41,703,44,3.4);
-  fitT(TYPES[o.type]||TYPES[0],95,661,121,22,C.br,900);T('最適合你的照顧風格！',95,694,11.5,C.ink,500);c.strokeStyle='rgba(190,140,90,.4)';c.lineWidth=1;c.beginPath();c.moveTo(95,706);c.lineTo(202,706);c.stroke();
-  strokes([[236,596,236,732],[392,596,392,732]],'rgba(200,155,110,.4)',1);
-  T('推薦犬種',265,622,14,C.ink,700);c.fillStyle='#E7B96A';c.beginPath();c.moveTo(343,626);c.lineTo(341,609);c.lineTo(348,616);c.lineTo(354,605);c.lineTo(359,616);c.lineTo(367,610);c.lineTo(364,626);c.closePath();c.fill();
-  fitT(rn,265,661,112,26,C.br,900);box(265,684,104,32,14,C.peach2);T('契合度 '+o.fit+'%',317,701,14.5,C.ink,700,'center');
-  {const cx=486,cy=675,R=46,pt=(i,r)=>{const t=-Math.PI/2+i*Math.PI/3;return[cx+r*Math.cos(t),cy+r*Math.sin(t)]},poly=f=>{c.beginPath();for(let i=0;i<6;i++){const p=pt(i,f(i));i?c.lineTo(...p):c.moveTo(...p)}c.closePath()};
+  c.fillStyle='#F8E4CB';c.beginPath();c.moveTo(72,594);c.lineTo(188,596);c.bezierCurveTo(216,598,226,630,222,664);c.bezierCurveTo(225,704,212,734,182,733);c.lineTo(64,734);c.bezierCurveTo(36,733,24,708,27,668);c.bezierCurveTo(25,626,42,595,72,594);c.fill();
+  T('理想照顧選擇',147,620,14,C.ink,700,'center');
+  c.fillStyle='#8F5E3D';c.fillRect(76,663,8,16);c.beginPath();c.moveTo(39,686);c.lineTo(63,661);c.lineTo(87,686);c.lineTo(83,690);c.lineTo(63,671);c.lineTo(43,690);c.closePath();c.fill();c.fillStyle='#C08A5B';c.beginPath();c.moveTo(46,685);c.lineTo(63,669);c.lineTo(80,685);c.lineTo(80,704);c.lineTo(46,704);c.closePath();c.fill();heart(63,689,6,'#FFF3E0');c.fillStyle='#8F5E3D';c.fillRect(41,703,44,3);
+  fitT(TYPES[o.type]||TYPES[0],95,661,121,21,C.ink,900);T('最適合你的照顧風格！',95,694,11.5,C.ink,500);c.fillStyle=C.ink2;c.fillRect(95,705,108,1.2);
+  T('推薦犬種',258,620,14,C.ink,700);c.fillStyle='#E9BC6E';c.beginPath();c.moveTo(334,627);c.lineTo(331,609);c.lineTo(339,617);c.lineTo(345,606);c.lineTo(351,617);c.lineTo(359,609);c.lineTo(356,627);c.closePath();c.fill();
+  fitT(rn,258,662,120,27,C.ink,900);box(258,684,108,32,16,'#F6CF96');T('契合度 '+o.fit+'%',312,701,14,C.ink,700,'center');
+  {const cx=486,cy=677,R=46,pt=(i,r)=>{const t=-Math.PI/2+i*Math.PI/3;return[cx+r*Math.cos(t),cy+r*Math.sin(t)]};
   T('六大面向表現',cx,598,13.5,C.ink,700,'center');
-  c.fillStyle='rgba(255,250,240,.9)';c.strokeStyle='rgba(200,155,110,.45)';c.lineWidth=1;c.beginPath();c.arc(cx,cy,R,0,7);c.fill();c.stroke();c.beginPath();c.arc(cx,cy,R*.55,0,7);c.stroke();
-  strokes([0,1,2,3,4,5].map(i=>[cx,cy,...pt(i,R)]),'rgba(200,155,110,.28)',1);
-  poly(i=>R*Math.max(.14,o.r[i]/100));c.fillStyle='rgba(240,196,140,.78)';c.fill();c.strokeStyle='#A8693B';c.lineWidth=2;c.lineJoin='round';c.stroke();
+  c.strokeStyle='rgba(91,56,38,.55)';c.lineWidth=1;[1,.66,.33].forEach(f=>{c.beginPath();c.arc(cx,cy,R*f,0,7);c.stroke()});
+  c.strokeStyle='rgba(91,56,38,.3)';for(let i=0;i<6;i++){c.beginPath();c.moveTo(cx,cy);c.lineTo(...pt(i,R));c.stroke()}
+  c.beginPath();for(let i=0;i<6;i++){const p=pt(i,R*Math.max(.14,o.r[i]/100));i?c.lineTo(...p):c.moveTo(...p)}c.closePath();c.fillStyle='rgba(233,170,105,.72)';c.fill();c.strokeStyle='#9A6038';c.lineWidth=1.6;c.lineJoin='round';c.stroke();
   const L=[[0,-57,'center'],[50,-29,'left'],[50,29,'left'],[0,57,'center'],[-50,29,'right'],[-50,-29,'right']];AXES.forEach((l,i)=>T(l,cx+L[i][0],cy+L[i][1],12,C.ink,500,L[i][2]))}
 
   /* 03 陪伴紀念 */
   panel(760,218,'03','我們的陪伴紀念','MEMORIES');
-  c.save();c.translate(140,888);c.rotate(-.05);c.save();c.shadowColor='rgba(80,45,20,.26)';c.shadowBlur=12;c.shadowOffsetY=5;c.fillStyle='#FFFDF8';c.fillRect(-104,-74,208,152);c.restore();
-  c.save();c.beginPath();c.rect(-96,-66,192,114);c.clip();c.fillStyle='#D9C3A8';c.fillRect(-96,-66,192,114);coverI(scI,-96,-66,192,114,.8);c.shadowColor='rgba(60,40,20,.3)';c.shadowBlur=6;c.shadowOffsetY=2;POSE[scn]=='sleep'?contain(mem,-74,-40,148,82):contain(mem,-62,-56,124,98);c.restore();
-  heart(74,-46,7,'#FFF8EC');fitT(`DAY ${String(o.day).padStart(2,'0')}${evT?'・'+evT:''}`,0,63,188,12.5,C.ink,700,'center');c.restore();
-  tape(58,822,42,13,-.16);tape(212,810,46,13,.1);
-  T('這 30 天，我們一起經歷了……',268,827,15,C.ink,900);
-  lines('從第一次迎接、日常照顧，到一起度過不同的生活事件，每一段都是值得珍藏的回憶。',12.5,500,F,294).slice(0,2).forEach((l,i)=>T(l,268,851+i*19,12.5,C.ink2,500));
-  box(266,888,296,76,18,C.peach);fitT(`我想對${o.name}說的話`,281,907,264,13.5,C.ink,700);
-  {let s=19,L;while((L=lines(o.msg+' ♡',s,400,HW,266)).length>1&&s>15.5)s-=.5;if(L.length>1){s=17;while((L=lines(o.msg+' ♡',s,400,HW,266)).length>2&&s>11)s-=.5}if(L.length==1)T(L[0],414,937,s,C.ink,400,'center',HW);else L.slice(0,2).forEach((l,i)=>T(l,281,930+i*(s+4),s,C.ink,400,'left',HW))}
+  contain(mem,26,806,204,140);
+  fitT(`DAY ${String(o.day).padStart(2,'0')}${evT?'・'+evT:''}`,128,960,196,11.5,C.ink2,600,'center');
+  T('這 30 天，我們一起經歷了……',250,822,15.5,C.ink,900);
+  lines('從第一次迎接、日常照顧，到一起度過不同的生活事件，每一段都是值得珍藏的回憶。',12.5,500,F,312).slice(0,2).forEach((l,i)=>T(l,250,849+i*19,12.5,C.ink,500));
+  box(248,890,316,74,18,'#F8E4CB');fitT(`我想對${o.name}說的話`,264,908,284,13.5,C.ink,700);
+  {let s=19,L;while((L=lines(o.msg,s,400,HW,286)).length>1&&s>15.5)s-=.5;if(L.length>1){s=17;while((L=lines(o.msg,s,400,HW,286)).length>2&&s>11)s-=.5}if(L.length==1)T(L[0],264,938,s,C.ink,400,'left',HW,1);else L.slice(0,2).forEach((l,i)=>T(l,264,931+i*(s+4),s,C.ink,400,'left',HW))}
 
-  /* 頁尾 */
-  box(24,990,542,60,24,'rgba(255,248,238,.75)');
-  const leaf=(x,y,f)=>{c.save();c.translate(x,y);c.scale(f,1);c.fillStyle='#A9A97A';[[0,0,9,20,-.15],[-13,8,7,15,-.8],[13,6,7,15,.6],[-9,-13,6,12,-.5],[8,-15,6,12,.4]].forEach(([a,b,d,e,r])=>{c.beginPath();c.ellipse(a,b,d,e,r,0,7);c.fill()});c.strokeStyle='#7E8456';c.lineWidth=1.6;c.beginPath();c.moveTo(-2,26);c.quadraticCurveTo(0,4,0,-18);c.stroke();c.restore()};
-  leaf(36,1030,1);leaf(554,1030,-1);
-  {const t='成為一位好的飼主，從理解與準備開始。',w=tw(t,17,700);paw(CW/2-w/2-14,1010,12,C.tan);T(t,CW/2+10,1010,17,C.ink,700,'center')}
-  T('毛²評估所 PET READINESS LAB',CW/2+4,1034,12,C.br,500,'center');
+  /* 頁尾：沙丘、兩叢葉子、一句話和標準字 */
+  c.fillStyle='#EED4B2';c.beginPath();c.moveTo(0,1040);c.quadraticCurveTo(CW/2,1000,CW,1040);c.lineTo(CW,CH);c.lineTo(0,CH);c.closePath();c.fill();
+  c.save();c.translate(36,1062);c.scale(1.35,1.35);sprig(0,0,1);c.restore();c.save();c.translate(554,1062);c.scale(1.35,1.35);sprig(0,0,-1);c.restore();
+  T('成為一位好飼主，從理解與準備開始。',CW/2,1004,16,C.ink,700,'center');
+  mark(CW/2,1022,24,'center');
   c.restore();
   return cv}
 
