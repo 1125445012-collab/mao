@@ -416,3 +416,32 @@ body:has(.rgm) #tskip{z-index:99999}
 .mic{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(11,minmax(0,34px));gap:4px}
 .mic li{aspect-ratio:1}.mic .ach-ic{width:100%;height:100%;filter:grayscale(1) brightness(1.15);opacity:.35}.mic li.on .ach-ic{filter:none;opacity:1}
 @media(max-width:760px){.rpx{grid-template-columns:1fr}.rpx .fmr{grid-template-columns:1fr;gap:4px}.rpx .fmr li{padding:6px 10px}.mrh{flex-direction:column;align-items:flex-start;gap:4px}}
+/* ===== 參考「毛毛評估所_動態版」調整的排版 ===== */
+/* 一生：左邊場景 66%、右邊日曆 34%；日曆選項精簡 */
+@media(min-width:901px){
+.lf{grid-template-columns:minmax(0,66fr) minmax(0,34fr)}
+.lf .leaf h2{font-size:clamp(20px,min(5cqw,3.6vh),32px)}
+.lf .leaf .sc{font-size:clamp(14px,min(2.7cqw,2.1vh),18px)}
+.lf .leaf .ops{gap:clamp(8px,1.2vh,12px);margin-top:clamp(14px,2.2vh,22px)}
+.lf .leaf .opt{min-height:clamp(50px,7vh,66px);padding:9px clamp(12px,2.6cqw,18px) 9px clamp(10px,2cqw,14px);gap:clamp(10px,2.2cqw,14px);border-radius:14px}
+.lf .leaf .opt i,.lf .leaf .opt:nth-child(n) i{width:clamp(30px,5.4cqw,38px);height:clamp(30px,5.4cqw,38px);font-size:clamp(14px,2.6cqw,17px);border-radius:10px}
+.lf .leaf .opt b{font-size:clamp(13.5px,min(2.6cqw,2vh),16px);line-height:1.45}
+}
+/* 模擬評估表開頭：深色大卡＋四格數字＋結論卡 */
+.eh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-radius:36px;overflow:hidden;background:#1E3440;color:#FFF7EC;margin-top:52px}
+.eh-l{padding:clamp(24px,4vw,48px);display:flex;flex-direction:column;justify-content:center}
+.eh-l small{font:700 11.5px/1.5 var(--num);letter-spacing:.18em;color:#F7C08A}
+.eh-l h2{margin:16px 0 10px;font:900 clamp(36px,5vw,60px)/1.15 var(--serif9);color:#FFF7EC}
+.eh-l p{margin:0;font:500 15px/1.7 var(--sans);color:rgba(255,247,236,.8)}
+.eh-r{position:relative;min-height:clamp(240px,30vw,340px);background-size:cover;background-position:center}
+.eh-r img{position:absolute;left:50%;bottom:8%;height:60%;max-width:78%;object-fit:contain;width:auto;transform:translateX(-50%);filter:drop-shadow(0 10px 14px rgba(30,52,64,.25))}
+.ens{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+.ens>div{background:#fff;border-radius:22px;padding:16px 18px}
+.ens b{display:block;font:800 clamp(26px,3.2vw,40px)/1 var(--num);color:#1E3440}.ens b em{font:700 .45em var(--num);font-style:normal;color:#4A5F69}
+.ens small{display:block;margin-top:8px;font:700 13px var(--sans);color:#4A5F69}
+.evd{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(16px,3vw,28px);align-items:center;margin-top:14px;background:#fff;border-radius:28px;padding:clamp(18px,3vw,30px)}
+.evd .rg3{width:clamp(96px,10vw,120px);height:clamp(96px,10vw,120px)}
+.evd h3{margin:0 0 6px;font:900 clamp(20px,2.4vw,24px)/1.35 var(--serif9);color:#1E3440}
+.evd p{margin:0;font:500 14.5px/1.75 var(--sans);color:#4A5F69}
+.evb{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px;margin-top:10px;max-width:520px}
+@media(max-width:760px){.eh{grid-template-columns:1fr;border-radius:26px}.eh-r{min-height:220px}.ens{grid-template-columns:1fr 1fr}.evd{grid-template-columns:1fr;justify-items:start}.evb{grid-template-columns:1fr}}.evd .rg3 b{font-size:clamp(26px,3vw,34px)}
